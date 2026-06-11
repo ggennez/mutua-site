@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposta de Parceria — Vivá Pilates e Saúde × Muthua — Design de Negócios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1A6DE5;
+  --blue2:#103FEA;
+  --blue3:#0a2fa8;
+  --accent:#5B9DFF;
+  --bg:#070c10;
+  --bg2:#0e151c;
+  --dark:#040809;
+  --surface:#141e26;
+  --text:#F5F4ED;
+  --text-dim:rgba(245,244,237,.62);
+  --text-faint:rgba(245,244,237,.42);
+  --grad:linear-gradient(135deg,#103FEA 0%,#1A6DE5 60%,#0a2fa8 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Inter',sans-serif}
+a{color:inherit}
+i,em{font-style:italic}
+
+/* film-grain overlay for a cinematic texture */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;
+  background-image:radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size:3px 3px;
+  opacity:.4;
+  mix-blend-mode:overlay;
+}
+
+/* ===== ACCENT TEXT (solid color, Fraunces italic) ===== */
+.accent{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-weight:600;
+  color:var(--accent);
+}
+
+/* ===== ANIMATED GRADIENT BACKGROUNDS ===== */
+@keyframes gradFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+.grad-bg{
+  position:relative;
+  background:linear-gradient(120deg,#040809 0%,#0a2fa8 35%,#1A6DE5 55%,#103FEA 75%,#040809 100%);
+  background-size:400% 400%;
+  animation:gradFlow 24s ease infinite;
+}
+.grad-bg.alt{
+  background:linear-gradient(60deg,#0a1016 0%,#103FEA 30%,#1A6DE5 50%,#0a2fa8 70%,#0a1016 100%);
+  background-size:400% 400%;
+  animation:gradFlow 32s ease infinite reverse;
+}
+@keyframes blobDrift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(50px,-40px) scale(1.18)}
+}
+@keyframes blobDrift2{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-60px,30px) scale(1.1)}
+}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;mix-blend-mode:screen;z-index:0}
+.blob-a{top:-15%;right:-10%;width:520px;height:520px;background:rgba(26,109,229,.35);animation:blobDrift 16s ease-in-out infinite}
+.blob-b{bottom:-20%;left:-10%;width:480px;height:480px;background:rgba(16,63,234,.3);animation:blobDrift2 20s ease-in-out infinite}
+
+/* ===== CINEMATIC SCENE FRAMING ===== */
+.scene::before,.scene::after{content:'';position:absolute;left:0;right:0;height:clamp(12px,2.4vw,30px);
+  background:#000;z-index:4;pointer-events:none}
+.scene::before{top:0}
+.scene::after{bottom:0}
+.scene-tag{position:absolute;z-index:3;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.scene-tag.tl{top:clamp(28px,4.5vw,56px);left:6vw}
+.scene-tag.tr{top:clamp(28px,4.5vw,56px);right:6vw;text-align:right}
+.scene-tag.bl{bottom:clamp(28px,4.5vw,56px);left:6vw}
+.scene-tag.br{bottom:clamp(28px,4.5vw,56px);right:6vw;text-align:right}
+
+section{position:relative;padding:130px 6vw;overflow:hidden;text-align:center}
+
+/* ===== SCROLL PROGRESS ===== */
+.progress-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;background:rgba(255,255,255,.06)}
+.progress-fill{height:100%;width:0%;background:var(--grad);background-size:200% 100%;animation:gradFlow 6s linear infinite}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:64px;background:rgba(4,8,9,0.85);backdrop-filter:blur(14px)}
+.nav::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--grad);
+  background-size:200% 100%;animation:gradFlow 6s linear infinite}
+.nav .logo{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:-0.5px;font-style:italic}
+.nav .tag{font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.5);display:none}
+.nav a.cta{font-size:13px;font-weight:600;color:#fff;background:var(--grad);background-size:200% 100%;
+  padding:9px 20px;text-decoration:none;transition:background-position .4s}
+.nav a.cta:hover{background-position:100% 0}
+@media(min-width:640px){.nav .tag{display:block}}
+
+/* ===== MASTHEAD ===== */
+.masthead{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.masthead-inner{display:flex;flex-direction:column;align-items:center;gap:30px;position:relative;z-index:2}
+.presents{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600}
+.masthead-title{font-family:'Inter',sans-serif;font-weight:900;font-size:clamp(64px,17vw,230px);line-height:.92;
+  letter-spacing:-3px;color:#fff}
+.masthead-title .accent{font-size:.85em;display:block}
+.masthead-sub{font-size:clamp(20px,3.6vw,48px);margin-top:-12px}
+.bar{width:90px;height:3px;background:var(--grad);background-size:200% 100%;animation:gradFlow 6s linear infinite}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:140px 6vw 100px;text-align:center}
+.hero-inner{max-width:920px;margin:0 auto;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+.badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;margin-bottom:28px}
+.hero h1{font-family:'Inter',sans-serif;font-weight:800;font-size:clamp(40px,7.5vw,92px);line-height:1.05;color:#fff;margin-bottom:28px;letter-spacing:-1.5px}
+.hero h1 .accent{font-size:1.05em}
+.hero p{font-size:17px;color:rgba(255,255,255,.7);max-width:560px;line-height:1.8;margin:0 auto 44px}
+.hero .meta{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;font-size:12px;color:rgba(255,255,255,.45);
+  letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.hero .meta b{color:#fff;display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:600;
+  margin-bottom:6px;text-transform:none;letter-spacing:0;font-style:italic}
+
+/* ===== TICKER ===== */
+.ticker{overflow:hidden;white-space:nowrap;background:var(--dark);padding:24px 0;position:relative;z-index:1}
+.ticker-track{display:inline-flex;animation:tickerMove 30s linear infinite}
+.ticker-track .group{display:inline-flex;align-items:center;flex-shrink:0}
+.ticker-track span.word{font-family:'Inter',sans-serif;font-size:clamp(16px,2.2vw,24px);font-weight:700;
+  color:rgba(255,255,255,.92);padding:0 28px;white-space:nowrap;letter-spacing:.04em}
+.ticker-track span.word.i{font-family:'Fraunces',serif;font-style:italic;font-weight:600;color:var(--accent)}
+.ticker-track .dot{width:9px;height:9px;background:var(--blue);flex-shrink:0;border-radius:50%}
+@keyframes tickerMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ===== STATS STRIP ===== */
+.stats-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:56px;position:relative;z-index:2;text-align:center}
+.stat-num{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:clamp(60px,9vw,120px);
+  color:var(--accent);line-height:1;margin-bottom:18px}
+.stat-label{font-size:13px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;line-height:1.7}
+
+/* ===== SECTION GENERIC ===== */
+.wrap{max-width:1120px;margin:0 auto;position:relative;z-index:1}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);
+  display:inline-block;margin-bottom:28px}
+h2.title{font-family:'Inter',sans-serif;font-weight:800;font-size:clamp(34px,5vw,58px);line-height:1.1;margin-bottom:24px;letter-spacing:-1px;color:var(--text)}
+.lead{font-size:16px;color:var(--text-dim);line-height:1.8;max-width:600px;margin:0 auto 48px}
+.dark-bg{background:var(--dark)}
+.alt-bg{background:var(--bg2)}
+
+/* ===== DIAGNÓSTICO ===== */
+.diag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px;margin-top:56px}
+.diag-card{background:rgba(255,255,255,.05);padding:44px 36px;display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:18px;transition:background .3s, transform .3s}
+.diag-card:hover{background:rgba(255,255,255,.09);transform:translateY(-6px)}
+.diag-card .dn{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:44px;color:var(--accent);line-height:1}
+.diag-card h3{font-size:19px;font-weight:700;color:var(--text)}
+.diag-card p{font-size:14px;color:var(--text-dim);line-height:1.75}
+
+/* ===== PLANOS ===== */
+.plans{display:flex;flex-direction:row;align-items:stretch;gap:24px;margin-top:56px;position:relative;z-index:1}
+.plan{background:var(--surface);padding:56px 36px;position:relative;flex:1;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:32px;
+  transition:transform .3s ease}
+.plan:hover{transform:translateY(-6px)}
+.plan.highlight{
+  background:linear-gradient(120deg,#040809 0%,#0a2fa8 35%,#1A6DE5 55%,#103FEA 75%,#040809 100%);
+  background-size:400% 400%;
+  animation:gradFlow 24s ease infinite;
+}
+.plan .badge-rec{position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--grad);font-size:11px;font-weight:700;
+  color:#fff;padding:7px 18px;letter-spacing:.16em;text-transform:uppercase;
+  background-size:200% 100%;animation:gradFlow 6s linear infinite}
+.plan-info{display:flex;flex-direction:column;align-items:center;gap:6px}
+.plan .ptag{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px}
+.plan.highlight .ptag{color:rgba(255,255,255,.45)}
+.plan .ptag.pad{margin-top:24px}
+.plan .pname{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:30px;color:var(--accent);
+  margin-bottom:10px;line-height:1.1}
+.plan.highlight .pname{color:#fff}
+.plan .price{font-size:38px;font-weight:800;font-family:'Inter',sans-serif;color:var(--text);margin-bottom:6px;letter-spacing:-1px}
+.plan.highlight .price{color:#fff}
+.plan .price small{font-size:14px;font-weight:500;font-family:'Inter',sans-serif;color:var(--text-faint)}
+.plan.highlight .price small{color:rgba(255,255,255,.5)}
+.plan .extra{font-size:12px;color:var(--text-faint);margin-bottom:18px;text-transform:uppercase;letter-spacing:.06em}
+.plan.highlight .extra{color:rgba(255,255,255,.55)}
+.plan .ideal{font-size:13px;font-style:italic;font-family:'Fraunces',serif;color:var(--text-faint)}
+.plan.highlight .ideal{color:rgba(255,255,255,.55)}
+.plan-details{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:640px}
+.plan .pdesc{font-size:14.5px;color:var(--text-dim);line-height:1.8}
+.plan.highlight .pdesc{color:rgba(255,255,255,.7)}
+.plan ul{list-style:none;display:flex;flex-direction:column;align-items:center;gap:12px}
+.plan li{font-size:13.5px;color:rgba(245,244,237,.8);display:inline-flex;gap:10px;align-items:center}
+.plan.highlight li{color:rgba(255,255,255,.85)}
+.plan li::before{content:'';width:8px;height:8px;background:var(--blue);flex-shrink:0}
+.plan.highlight li::before{background:#fff}
+.plan-cta{display:inline-block;font-size:13px;font-weight:700;color:#fff;background:var(--grad);
+  background-size:200% 100%;padding:14px 34px;text-decoration:none;letter-spacing:.04em;
+  margin-top:8px;transition:background-position .4s, transform .2s}
+.plan-cta:hover{background-position:100% 0;transform:scale(1.03)}
+.plan.highlight .plan-cta{background:#fff;color:var(--blue3)}
+.plan.highlight .plan-cta:hover{background:rgba(255,255,255,.88)}
+
+@media(max-width:900px){
+  .plans{flex-direction:column}
+}
+@media(max-width:760px){
+  .plan{padding:36px 28px}
+}
+
+/* ===== PROCESSO / BAR TIMELINE ===== */
+.bartimeline{display:flex;flex-direction:column;gap:52px;margin-top:72px;text-align:left}
+.bt-row{position:relative;width:100%}
+.bt-track{position:relative;height:12px;width:100%;background:rgba(255,255,255,.05)}
+.bt-bar{position:absolute;top:0;left:var(--start);width:var(--width);height:100%;
+  background:var(--grad);background-size:200% 100%;animation:gradFlow 8s linear infinite}
+.bt-content{margin-top:24px;margin-left:var(--start);max-width:calc(100% - var(--start))}
+.bt-num{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:34px;color:var(--accent);
+  display:block;margin-bottom:10px;line-height:1}
+.bt-content h4{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text)}
+.bt-content p{font-size:13.5px;color:var(--text-dim);line-height:1.75;max-width:340px}
+
+@media(max-width:760px){
+  .bt-content{margin-left:0!important;max-width:100%}
+  .bt-content p{max-width:100%}
+}
+
+/* ===== CONTRATO / BENTO ===== */
+.contract{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto auto;gap:20px;margin-top:48px;text-align:left}
+.contract .item{padding:44px;background:var(--surface);transition:transform .3s}
+.contract .item:hover{transform:translateY(-6px)}
+.contract .item.big{grid-row:1 / 3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.contract .item .num{font-family:'Fraunces',serif;font-style:italic;font-size:56px;font-weight:700;color:var(--accent);
+  margin-bottom:14px;line-height:1}
+.contract .item.big .num{font-size:84px}
+.contract .item h4{font-family:'Inter',sans-serif;font-size:16px;font-weight:700;margin-bottom:10px;color:var(--text)}
+.contract .item p{font-size:13.5px;color:var(--text-dim);line-height:1.75}
+.contract .item.note-item{background:rgba(26,109,229,.12);display:flex;flex-direction:column;justify-content:center}
+.contract .item.note-item h4{color:var(--accent);text-transform:uppercase;letter-spacing:.14em;font-size:12px}
+
+@media(max-width:760px){
+  .contract{grid-template-columns:1fr;grid-template-rows:auto}
+  .contract .item.big{grid-row:auto}
+}
+
+/* ===== CTA ===== */
+.cta-section{text-align:center;min-height:90vh;display:flex;align-items:center;justify-content:center}
+.cta-inner{max-width:680px;margin:0 auto;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+.cta-inner h2{color:#fff;margin-bottom:24px}
+.cta-inner p{color:rgba(255,255,255,.65);font-size:16px;line-height:1.8;margin-bottom:48px}
+.btn-grad{display:inline-block;font-size:15px;font-weight:600;color:#fff;background:var(--grad);
+  background-size:200% 100%;padding:18px 48px;text-decoration:none;transition:background-position .4s, transform .2s}
+.btn-grad:hover{background-position:100% 0;transform:scale(1.03)}
+
+/* ===== FOOTER ===== */
+footer{background:#020405;padding:40px 6vw;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+footer .brand{font-family:'Fraunces',serif;font-style:italic;font-size:18px;font-weight:700;color:rgba(255,255,255,.5)}
+footer span{font-size:12px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.1em}
+
+/* ===== REVEAL ===== */
+.reveal{opacity:0;transform:translateY(40px) scale(.97);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:translateY(0) scale(1)}
+
+@media(max-width:680px){
+  section{padding:80px 24px}
+  .stats-wrap{gap:40px}
+  .hero .meta{gap:24px}
+  .scene-tag{font-size:9px;letter-spacing:.2em}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<nav class="nav">
+  <span class="logo">Muthua</span>
+  <span class="tag">Proposta de Parceria — Vivá Pilates e Saúde</span>
+  <a class="cta" href="#contato">Falar com a Muthua</a>
+</nav>
+
+<!-- MASTHEAD -->
+<section class="masthead grad-bg scene">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <span class="scene-tag tl">Muthua — Design de Negócios</span>
+  <span class="scene-tag tr">Proposta Nº 001</span>
+  <span class="scene-tag bl">Vivá Pilates e Saúde × Muthua</span>
+  <span class="scene-tag br">Jun 2026</span>
+  <div class="masthead-inner reveal">
+    <div class="presents">Muthua — Design de Negócios apresenta</div>
+    <h1 class="masthead-title">Vivá</h1>
+    <div class="masthead-sub accent">Pilates e Saúde</div>
+    <div class="bar"></div>
+    <div class="presents">Preparada especialmente para Érica e Vinícius</div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="group">
+      <span class="word">VIVÁ PILATES E SAÚDE</span><span class="word i">×</span><span class="word">MUTHUA</span>
+      <span class="dot"></span><span class="word">PRESENÇA</span>
+      <span class="dot"></span><span class="word i">aquisição</span>
+      <span class="dot"></span><span class="word">CRESCIMENTO</span>
+      <span class="dot"></span><span class="word i">previsível</span>
+      <span class="dot"></span>
+    </div>
+    <div class="group">
+      <span class="word">VIVÁ PILATES E SAÚDE</span><span class="word i">×</span><span class="word">MUTHUA</span>
+      <span class="dot"></span><span class="word">PRESENÇA</span>
+      <span class="dot"></span><span class="word i">aquisição</span>
+      <span class="dot"></span><span class="word">CRESCIMENTO</span>
+      <span class="dot"></span><span class="word i">previsível</span>
+      <span class="dot"></span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero grad-bg scene">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <span class="scene-tag tl">Abertura</span>
+  <span class="scene-tag tr">01 / 06</span>
+  <div class="hero-inner reveal">
+    <span class="badge">Proposta comercial</span>
+    <h1>Mais alunas na agenda,<br>com <span class="accent">previsibilidade.</span></h1>
+    <p>Proposta de parceria entre Muthua — Design de Negócios — e Vivá Pilates e Saúde, preparada especialmente para Érica e Vinícius, com três formatos de operação para diferentes momentos de crescimento.</p>
+    <div class="meta">
+      <div><b>Érica & Vinícius</b>Vivá Pilates e Saúde</div>
+      <div><b>11 de junho de 2026</b>Data da proposta</div>
+      <div><b>Muthua</b>Design de Negócios</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="grad-bg alt scene">
+  <span class="scene-tag tl">Os números</span>
+  <span class="scene-tag tr">02 / 06</span>
+  <div class="wrap stats-wrap reveal">
+    <div>
+      <div class="stat-num"><span data-counter="4">0</span></div>
+      <div class="stat-label">Posts por semana<br>no plano de presença</div>
+    </div>
+    <div>
+      <div class="stat-num"><span data-counter="3">0</span></div>
+      <div class="stat-label">Meses de período<br>de experiência</div>
+    </div>
+    <div>
+      <div class="stat-num"><span data-counter="12">0</span></div>
+      <div class="stat-label">Meses de contrato<br>após a experiência</div>
+    </div>
+  </div>
+</section>
+
+<!-- DIAGNÓSTICO -->
+<section class="dark-bg">
+  <div class="wrap reveal">
+    <span class="eyebrow">Por que essa proposta</span>
+    <h2 class="title">Presença, aquisição e <span class="accent">crescimento</span><br>sob o mesmo teto</h2>
+    <p class="lead">Estúdios de pilates costumam concentrar a captação de alunas em indicação e localização. Isso funciona, mas tem teto. Esta proposta organiza três frentes — comunicação, aquisição paga e estrutura comercial — para que o studio tenha um fluxo mais previsível de novas matrículas, mantendo o padrão e a identidade da marca.</p>
+
+    <div class="diag-grid">
+      <div class="diag-card">
+        <div class="dn">01</div>
+        <h3>Presença consistente</h3>
+        <p>Redes sociais ativas e com identidade clara fortalecem a marca e mantêm o estúdio no radar de quem já conhece e de quem ainda vai conhecer.</p>
+      </div>
+      <div class="diag-card">
+        <div class="dn">02</div>
+        <h3>Aquisição ativa</h3>
+        <p>Tráfego pago bem direcionado leva o studio a pessoas que ainda não conhecem o espaço, mas se encaixam no perfil de aluna ideal.</p>
+      </div>
+      <div class="diag-card">
+        <div class="dn">03</div>
+        <h3>Operação comercial</h3>
+        <p>Processo estruturado de atendimento e conversão de interessados garante que o investimento em mídia vire matrícula — não só curtida.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section>
+  <div class="wrap reveal">
+    <span class="eyebrow">Opções de parceria</span>
+    <h2 class="title">Três formatos, <span class="accent">um único objetivo</span></h2>
+    <p class="lead">Escolha o ponto de partida ideal para o momento atual do studio. É possível evoluir de um plano para outro conforme os resultados aparecem.</p>
+
+    <div class="plans">
+
+      <!-- PLANO P -->
+      <div class="plan">
+        <div class="plan-info">
+          <h3 class="ptag">Plano P</h3>
+          <div class="pname">Presença</div>
+          <div class="price"><span data-counter="4000" data-prefix="R$ ">R$ 0</span><small>/mês</small></div>
+          <div class="extra">Sem verba de anúncio</div>
+          <p class="ideal">Ideal para fortalecer marca e manter constância de comunicação.</p>
+        </div>
+        <div class="plan-details">
+          <p class="pdesc">Construção de presença digital consistente, com conteúdo regular alinhado à identidade do studio.</p>
+          <ul>
+            <li>Gestão das redes sociais (Instagram)</li>
+            <li>4 publicações por semana (16 posts/mês)</li>
+            <li>Planejamento de conteúdo mensal</li>
+            <li>Stories e conteúdos de apoio</li>
+            <li>Calendário editorial</li>
+            <li>Relatório mensal de performance</li>
+          </ul>
+          <a class="plan-cta" href="https://wa.me/5543991118489?text=Ol%C3%A1%21%20Aqui%20s%C3%A3o%20%C3%89rica%20e%20Vin%C3%ADcius%2C%20da%20Viv%C3%A1%20Pilates%20e%20Sa%C3%BAde.%20Temos%20interesse%20no%20Plano%20P%20%28Presen%C3%A7a%29%20da%20proposta%20e%20gostar%C3%ADamos%20de%20saber%20mais." target="_blank" rel="noopener">Falar sobre o Plano P</a>
+        </div>
+      </div>
+
+      <!-- PLANO M -->
+      <div class="plan highlight">
+        <span class="badge-rec">Recomendado</span>
+        <div class="plan-info">
+          <h3 class="ptag pad">Plano M</h3>
+          <div class="pname">Aquisição</div>
+          <div class="price"><span data-counter="6000" data-prefix="R$ ">R$ 0</span><small>/mês</small></div>
+          <div class="extra">+ verba de anúncio (à parte)</div>
+          <p class="ideal">Ideal para gerar novas matrículas além da base atual de indicações.</p>
+        </div>
+        <div class="plan-details">
+          <p class="pdesc">Tudo do Plano P, somado a tráfego pago para gerar fluxo constante de novas interessadas.</p>
+          <ul>
+            <li>Tudo do Plano P</li>
+            <li>Gestão de campanhas de tráfego pago (Meta/Google Ads)</li>
+            <li>Produção dos criativos para os anúncios</li>
+            <li>Segmentação e otimização contínua</li>
+            <li>Relatórios de performance de anúncios e redes</li>
+          </ul>
+          <a class="plan-cta" href="https://wa.me/5543991118489?text=Ol%C3%A1%21%20Aqui%20s%C3%A3o%20%C3%89rica%20e%20Vin%C3%ADcius%2C%20da%20Viv%C3%A1%20Pilates%20e%20Sa%C3%BAde.%20Temos%20interesse%20no%20Plano%20M%20%28Aquisi%C3%A7%C3%A3o%29%20da%20proposta%20e%20gostar%C3%ADamos%20de%20saber%20mais." target="_blank" rel="noopener">Falar sobre o Plano M</a>
+        </div>
+      </div>
+
+      <!-- PLANO G -->
+      <div class="plan">
+        <div class="plan-info">
+          <h3 class="ptag">Plano G</h3>
+          <div class="pname">Crescimento</div>
+          <div class="price"><span data-counter="8000" data-prefix="R$ ">R$ 0</span><small>/mês</small></div>
+          <div class="extra">+ verba de anúncio (à parte)</div>
+          <p class="ideal">Ideal para quem quer uma operação comercial estruturada, não só marketing.</p>
+        </div>
+        <div class="plan-details">
+          <p class="pdesc">Operação comercial completa: da comunicação à conversão, com planejamento e acompanhamento de receita.</p>
+          <ul>
+            <li>Tudo do Plano M</li>
+            <li>Análise comercial completa do estúdio</li>
+            <li>Planejamento comercial estratégico</li>
+            <li>Estruturação completa da aquisição de clientes (funil + atendimento)</li>
+            <li>Acompanhamento de métricas de receita e conversão</li>
+            <li>Reuniões periódicas de performance</li>
+          </ul>
+          <a class="plan-cta" href="https://wa.me/5543991118489?text=Ol%C3%A1%21%20Aqui%20s%C3%A3o%20%C3%89rica%20e%20Vin%C3%ADcius%2C%20da%20Viv%C3%A1%20Pilates%20e%20Sa%C3%BAde.%20Temos%20interesse%20no%20Plano%20G%20%28Crescimento%29%20da%20proposta%20e%20gostar%C3%ADamos%20de%20saber%20mais." target="_blank" rel="noopener">Falar sobre o Plano G</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="alt-bg">
+  <div class="wrap reveal">
+    <span class="eyebrow">Como começamos</span>
+    <h2 class="title">Da assinatura ao primeiro <span class="accent">ciclo de resultados</span></h2>
+    <div class="bartimeline">
+      <div class="bt-row" style="--start:0%;--width:25%">
+        <div class="bt-track"><div class="bt-bar"></div></div>
+        <div class="bt-content">
+          <span class="bt-num">01</span>
+          <h4>Imersão inicial</h4>
+          <p>Reunião de alinhamento para entender rotina do estúdio, identidade, turmas, ticket médio e metas do studio.</p>
+        </div>
+      </div>
+      <div class="bt-row" style="--start:25%;--width:25%">
+        <div class="bt-track"><div class="bt-bar"></div></div>
+        <div class="bt-content">
+          <span class="bt-num">02</span>
+          <h4>Configuração</h4>
+          <p>Organização do calendário de conteúdo (e, nos planos M/G, configuração de campanhas e ferramentas de acompanhamento).</p>
+        </div>
+      </div>
+      <div class="bt-row" style="--start:50%;--width:25%">
+        <div class="bt-track"><div class="bt-bar"></div></div>
+        <div class="bt-content">
+          <span class="bt-num">03</span>
+          <h4>Execução mensal</h4>
+          <p>Produção e publicação de conteúdo, gestão de campanhas e acompanhamento contínuo conforme o plano escolhido.</p>
+        </div>
+      </div>
+      <div class="bt-row" style="--start:75%;--width:25%">
+        <div class="bt-track"><div class="bt-bar"></div></div>
+        <div class="bt-content">
+          <span class="bt-num">04</span>
+          <h4>Revisão de resultados</h4>
+          <p>Relatório mensal com o que foi feito, o que performou e os ajustes para o próximo ciclo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRATO -->
+<section>
+  <div class="wrap reveal">
+    <span class="eyebrow">Modelo de contrato</span>
+    <h2 class="title">Período de <span class="accent">experiência</span><br>antes do compromisso longo</h2>
+    <p class="lead">Para que ambos os lados validem o encaixe da parceria antes de um compromisso mais longo.</p>
+
+    <div class="contract">
+      <div class="item big">
+        <div class="num"><span data-counter="3" data-suffix=" meses">0</span></div>
+        <h4>Período de experiência</h4>
+        <p>Início da parceria com ciclo de 3 meses, tempo necessário para o conteúdo e/ou as campanhas gerarem os primeiros resultados mensuráveis.</p>
+      </div>
+      <div class="item">
+        <div class="num"><span data-counter="12" data-suffix=" meses">0</span></div>
+        <h4>Contrato vigente</h4>
+        <p>Após o período de experiência, segue-se para um contrato de 12 meses, com os entregáveis do plano escolhido.</p>
+      </div>
+      <div class="item note-item">
+        <h4>Sobre a verba de anúncio (Planos M e G)</h4>
+        <p>O valor de mídia paga é investido diretamente pelo studio nas plataformas (Meta Ads / Google Ads), com total transparência de aplicação e relatórios de retorno. O valor mensal da Muthua refere-se à gestão, produção dos criativos e operação — não inclui a verba investida em anúncios.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section grad-bg scene" id="contato">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <span class="scene-tag tl">Próximos passos</span>
+  <span class="scene-tag tr">06 / 06</span>
+  <div class="cta-inner reveal">
+    <h2 class="title">Vamos colocar o studio<br><span class="accent">em movimento?</span></h2>
+    <p>Érica, Vinícius — qualquer dúvida sobre os planos, formas de pagamento ou ajustes no escopo, estamos à disposição para conversar.</p>
+    <a class="btn-grad" href="https://wa.me/5543991118489?text=Ol%C3%A1%21%20Aqui%20s%C3%A3o%20%C3%89rica%20e%20Vin%C3%ADcius%2C%20da%20Viv%C3%A1%20Pilates%20e%20Sa%C3%BAde.%20Vimos%20a%20proposta%20de%20parceria%20com%20a%20Muthua%20e%20gostar%C3%ADamos%20de%20conversar%20sobre%20os%20pr%C3%B3ximos%20passos." target="_blank" rel="noopener">Conversar sobre a proposta</a>
+  </div>
+</section>
+
+<footer>
+  <span class="brand">Muthua — Design de Negócios</span>
+  <span>Proposta preparada para Vivá Pilates e Saúde</span>
+  <span>© 2026 Muthua</span>
+</footer>
+
+<script>
+// scroll progress bar
+const progressFill = document.getElementById('progressFill');
+function updateProgress(){
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progressFill.style.width = pct + '%';
+}
+window.addEventListener('scroll', updateProgress, {passive:true});
+window.addEventListener('resize', updateProgress);
+updateProgress();
+
+// reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+},{threshold:0.15});
+reveals.forEach(el=>obs.observe(el));
+
+// animated counters
+function formatBR(n){ return n.toLocaleString('pt-BR'); }
+function runCounter(el){
+  const target = parseInt(el.dataset.counter, 10);
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  const dur = 1400;
+  const start = performance.now();
+  function step(now){
+    const p = Math.min((now - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = prefix + formatBR(Math.floor(eased * target)) + suffix;
+    if(p < 1) requestAnimationFrame(step);
+    else el.textContent = prefix + formatBR(target) + suffix;
+  }
+  requestAnimationFrame(step);
+}
+const counters = document.querySelectorAll('[data-counter]');
+const cObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ runCounter(e.target); cObs.unobserve(e.target); } });
+},{threshold:0.4});
+counters.forEach(el=>cObs.observe(el));
+</script>
+
+</body>
+</html>

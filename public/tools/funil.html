@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Funil Tracker — Mutua</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#060D0D;--blue:#1A6DE5;--blue2:#103FEA;
+  --cream:#FFFDF3;--gray:#E5E5E5;--mid:#0d1f3c;
+  --lb:#7aaef5;--muted:#8aaccc;--dim:#3a5a8a;
+  --border:rgba(26,109,229,.15);--surface:rgba(255,253,243,.04);
+  --g:linear-gradient(135deg,#103FEA 0%,#1A6DE5 60%,#0a2fa8 100%);
+  --pos:#4ade80;--neg:#f87171;--warn:#fbbf24;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--cream);min-height:100vh}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(6,13,13,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:54px}
+.nav-logo{font-family:'Fraunces',serif;font-size:15px;font-weight:600;letter-spacing:-.02em;color:var(--cream);text-decoration:none}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex}
+.nav-links a{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,253,243,.3);text-decoration:none;padding:0 14px;height:54px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--cream);border-bottom-color:var(--blue)}
+.nav-period{display:flex;gap:6px;align-items:center}
+.period-btn{font-size:10px;padding:5px 12px;background:var(--surface);border:1px solid var(--border);color:rgba(255,253,243,.4);cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;letter-spacing:.06em}
+.period-btn.active{background:rgba(16,63,234,.25);border-color:rgba(26,109,229,.5);color:var(--cream)}
+
+/* HERO */
+.hero{padding:48px 40px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero-glow{position:absolute;right:-80px;top:-80px;width:500px;height:500px;background:radial-gradient(ellipse,rgba(26,109,229,.1) 0%,transparent 70%);pointer-events:none}
+.tag{font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;display:block}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,48px);font-weight:600;letter-spacing:-.03em;line-height:1.05}
+.hero h1 em{font-style:italic;font-weight:300;color:var(--lb)}
+.hero p{font-size:13px;color:var(--muted);max-width:520px;margin-top:10px;font-weight:300}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:340px 1fr;gap:0;min-height:calc(100vh - 54px - 124px)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+
+/* SIDEBAR */
+.sidebar{border-right:1px solid var(--border);padding:28px 28px 80px;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--dim)}
+
+/* INPUTS */
+.stage-group{margin-bottom:28px}
+.sg-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.sg-dot{width:8px;height:8px;flex-shrink:0}
+.sg-title{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sg-count{font-size:9px;color:var(--dim);margin-left:auto}
+.field{margin-bottom:10px}
+.field label{font-size:10px;color:rgba(255,253,243,.4);display:block;margin-bottom:4px}
+.field .iw{position:relative}
+.field .pfx,.field .sfx{position:absolute;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none}
+.field .pfx{left:9px}
+.field .sfx{right:9px}
+input[type="number"]{width:100%;padding:8px 32px 8px 9px;background:var(--surface);border:1px solid var(--border);color:var(--cream);font-family:'Inter',sans-serif;font-size:12px;outline:none;transition:border-color .2s}
+input[type="number"].hp{padding-left:26px}
+input[type="number"]:focus{border-color:var(--blue)}
+input[type="number"]::-webkit-inner-spin-button{opacity:.25}
+.reset-btn{width:100%;padding:9px;background:rgba(255,253,243,.03);border:1px solid rgba(255,253,243,.08);color:rgba(255,253,243,.3);font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px}
+.reset-btn:hover{background:rgba(255,253,243,.07);color:var(--cream)}
+
+/* MAIN */
+.main{padding:28px 36px 80px;display:flex;flex-direction:column;gap:36px}
+
+/* SECTION HEADER */
+.sh{margin-bottom:18px}
+.sh h2{font-family:'Fraunces',serif;font-size:20px;font-weight:600;letter-spacing:-.02em}
+.sh p{font-size:11px;color:var(--muted);margin-top:3px;font-weight:300}
+
+/* FUNIL COMPACT */
+.funnel-visual{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border)}
+.fi-group-label{font-size:8px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding:14px 24px 6px;border-top:1px solid rgba(26,109,229,.08)}
+.fi-group:first-child .fi-group-label{border-top:none;padding-top:8px}
+.fi-item{display:flex;align-items:baseline;padding:7px 24px;border-bottom:1px solid rgba(26,109,229,.05);transition:background .15s;gap:0}
+.fi-item:hover{background:rgba(26,109,229,.06)}
+.fi-item:last-child{border-bottom:none}
+.fi-num{font-family:'Fraunces',serif;font-size:22px;font-weight:600;letter-spacing:-.025em;line-height:1.1;min-width:110px;text-align:right;flex-shrink:0;padding-right:14px}
+.fi-mid{display:flex;align-items:baseline;flex:1;gap:6px}
+.fi-dash{font-size:11px;color:var(--dim);flex-shrink:0}
+.fi-label{font-size:12px;color:rgba(255,253,243,.4);font-weight:300}
+.fi-right{display:flex;align-items:center;gap:7px;padding-left:20px;flex-shrink:0}
+.fi-pipe{font-size:13px;color:rgba(26,109,229,.35)}
+.fi-pct{font-family:'Fraunces',serif;font-size:15px;font-weight:600;min-width:56px;text-align:right}
+.fi-pct.good{color:var(--pos)}
+.fi-pct.warn{color:var(--warn)}
+.fi-pct.bad{color:var(--neg)}
+.badge-ok{background:rgba(74,222,128,.12);color:var(--pos)}
+.badge-warn{background:rgba(251,191,36,.12);color:var(--warn)}
+.badge-bad{background:rgba(248,113,113,.12);color:var(--neg)}
+
+/* METRIC CARDS */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px}
+.mc{padding:18px 18px 16px;background:var(--surface);border:1px solid var(--border);position:relative}
+.mc.hi{background:rgba(16,63,234,.18);border-color:rgba(26,109,229,.4)}
+.mc.good{background:rgba(74,222,128,.05);border-color:rgba(74,222,128,.2)}
+.mc.bad{background:rgba(248,113,113,.05);border-color:rgba(248,113,113,.15)}
+.mc-lbl{font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.mc-val{font-family:'Fraunces',serif;font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.mc-val.pos{color:var(--pos)}
+.mc-val.neg{color:var(--neg)}
+.mc-val.warn{color:var(--warn)}
+.mc-sub{font-size:10px;color:var(--dim);margin-top:4px}
+.mc-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:600;padding:2px 7px}
+
+/* GARGALOS */
+.bottleneck-list{display:flex;flex-direction:column;gap:2px}
+.bn{padding:16px 20px;background:var(--surface);border:1px solid var(--border);display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:center}
+.bn.critical{border-left:3px solid var(--neg)}
+.bn.warn{border-left:3px solid var(--warn)}
+.bn.ok{border-left:3px solid var(--pos)}
+.bn-rank{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--dim)}
+.bn-name{font-size:12px;font-weight:600;color:var(--cream);margin-bottom:3px}
+.bn-desc{font-size:10px;color:var(--muted);font-weight:300}
+.bn-loss{font-family:'Fraunces',serif;font-size:18px;font-weight:600;text-align:right}
+.bn-loss-label{font-size:9px;color:var(--dim);text-align:right;margin-top:2px}
+
+/* CHART */
+.chart-wrap{position:relative;background:var(--surface);border:1px solid var(--border);padding:20px;height:300px}
+
+/* CONVERSION WATERFALL */
+.waterfall{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:2px}
+.wf-step{padding:16px 12px;background:var(--surface);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+.wf-step::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:12px;z-index:1}
+.wf-step:last-child::after{display:none}
+.wf-val{font-family:'Fraunces',serif;font-size:20px;font-weight:600;line-height:1;margin-bottom:6px}
+.wf-name{font-size:9px;color:var(--muted);letter-spacing:.04em;margin-bottom:6px}
+.wf-rate{font-size:11px;font-weight:600;padding:2px 6px}
+.rate-pos{color:var(--pos);background:rgba(74,222,128,.1)}
+.rate-warn{color:var(--warn);background:rgba(251,191,36,.1)}
+.rate-neg{color:var(--neg);background:rgba(248,113,113,.1)}
+.rate-na{color:var(--dim)}
+
+/* BENCHMARK TABLE */
+.bench-table{width:100%;border-collapse:collapse;font-size:11px}
+.bench-table th{padding:9px 14px;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);text-align:left;border-bottom:1px solid var(--border);background:rgba(16,63,234,.07)}
+.bench-table td{padding:9px 14px;border-bottom:1px solid rgba(26,109,229,.06);color:rgba(255,253,243,.6)}
+.bench-table tr:hover td{background:rgba(26,109,229,.05)}
+.bench-table td:first-child{color:var(--cream);font-weight:500}
+.bench-table td.your{font-weight:600}
+.bench-table td.ok{color:var(--pos)}
+.bench-table td.warn{color:var(--warn)}
+.bench-table td.bad{color:var(--neg)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#"><span>Mu</span>tua · Funil Tracker</a>
+  <div class="nav-links">
+    <a href="#visao" class="active">Visão Geral</a>
+    <a href="#metricas">Métricas</a>
+    <a href="#gargalos">Gargalos</a>
+    <a href="#conversoes">Conversões</a>
+    <a href="#benchmarks">Benchmarks</a>
+  </div>
+  <div class="nav-period">
+    <button class="period-btn active" onclick="setPeriod(this,'Mensal')">Mensal</button>
+    <button class="period-btn" onclick="setPeriod(this,'Semanal')">Semanal</button>
+    <button class="period-btn" onclick="setPeriod(this,'Trimestral')">Trimestral</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <span class="tag">Rastreamento de Funil · <span id="hero-period">Mensal</span></span>
+  <h1>Onde o funil está <em>perdendo</em> pessoas?</h1>
+  <p>Insira os dados de cada etapa. Taxas de conversão, gargalos e benchmarks são calculados automaticamente.</p>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="stage-group">
+      <div class="sg-header">
+        <div class="sg-dot" style="background:#6366f1"></div>
+        <div class="sg-title">Awareness</div>
+      </div>
+      <div class="field"><label>Alcance único (pessoas impactadas)</label>
+        <div class="iw"><input type="number" id="alcance" value="50000" min="0" step="100"/></div></div>
+      <div class="field"><label>Impressões totais</label>
+        <div class="iw"><input type="number" id="impressoes" value="120000" min="0" step="100"/></div></div>
+      <div class="field"><label>Investimento em mídia (R$)</label>
+        <div class="iw"><span class="pfx">R$</span><input type="number" id="investimento" class="hp" value="5000" min="0" step="100"/></div></div>
+    </div>
+
+    <div class="stage-group">
+      <div class="sg-header">
+        <div class="sg-dot" style="background:#3b82f6"></div>
+        <div class="sg-title">Tráfego</div>
+      </div>
+      <div class="field"><label>Cliques no anúncio / link</label>
+        <div class="iw"><input type="number" id="cliques" value="3500" min="0"/></div></div>
+      <div class="field"><label>Acessos ao site / LP</label>
+        <div class="iw"><input type="number" id="acessos" value="3100" min="0"/></div></div>
+    </div>
+
+    <div class="stage-group">
+      <div class="sg-header">
+        <div class="sg-dot" style="background:#0ea5e9"></div>
+        <div class="sg-title">Captação de Leads</div>
+      </div>
+      <div class="field"><label>Leads capturados (formulário / opt-in)</label>
+        <div class="iw"><input type="number" id="leads" value="310" min="0"/></div></div>
+    </div>
+
+    <div class="stage-group">
+      <div class="sg-header">
+        <div class="sg-dot" style="background:#06b6d4"></div>
+        <div class="sg-title">Engajamento</div>
+      </div>
+      <div class="field"><label>Conversas iniciadas (WhatsApp / chat / DM)</label>
+        <div class="iw"><input type="number" id="conversas" value="180" min="0"/></div></div>
+      <div class="field"><label>Leads qualificados (MQL)</label>
+        <div class="iw"><input type="number" id="mql" value="90" min="0"/></div></div>
+    </div>
+
+    <div class="stage-group">
+      <div class="sg-header">
+        <div class="sg-dot" style="background:#1A6DE5"></div>
+        <div class="sg-title">Pipeline Comercial</div>
+      </div>
+      <div class="field"><label>Reuniões / demos agendadas</label>
+        <div class="iw"><input type="number" id="agendamentos" value="45" min="0"/></div></div>
+      <div class="field"><label>Reuniões realizadas (show rate)</label>
+        <div class="iw"><input type="number" id="reunioes" value="32" min="0"/></div></div>
+      <div class="field"><label>Propostas enviadas</label>
+        <div class="iw"><input type="number" id="propostas" value="28" min="0"/></div></div>
+    </div>
+
+    <div class="stage-group">
+      <div class="sg-header">
+        <div class="sg-dot" style="background:#8b5cf6"></div>
+        <div class="sg-title">Vendas</div>
+      </div>
+      <div class="field"><label>Carrinhos adicionados / intenções</label>
+        <div class="iw"><input type="number" id="carrinhos" value="22" min="0"/></div></div>
+      <div class="field"><label>Carrinhos abandonados</label>
+        <div class="iw"><input type="number" id="abandonos" value="10" min="0"/></div></div>
+      <div class="field"><label>Vendas realizadas</label>
+        <div class="iw"><input type="number" id="vendas" value="12" min="0"/></div></div>
+      <div class="field"><label>Ticket médio (R$)</label>
+        <div class="iw"><span class="pfx">R$</span><input type="number" id="ticket" class="hp" value="2500" min="0"/></div></div>
+    </div>
+
+    <div class="stage-group">
+      <div class="sg-header">
+        <div class="sg-dot" style="background:#4ade80"></div>
+        <div class="sg-title">Pós-venda</div>
+      </div>
+      <div class="field"><label>Base de clientes ativos</label>
+        <div class="iw"><input type="number" id="clientes_ativos" value="85" min="0"/></div></div>
+      <div class="field"><label>Cancelamentos no período</label>
+        <div class="iw"><input type="number" id="cancelamentos" value="4" min="0"/></div></div>
+      <div class="field"><label>Recompras / Upsells</label>
+        <div class="iw"><input type="number" id="recompras" value="8" min="0"/></div></div>
+      <div class="field"><label>NPS médio (0–10)</label>
+        <div class="iw"><input type="number" id="nps" value="7.5" min="0" max="10" step="0.1"/></div></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetInputs()">↺ Restaurar valores padrão</button>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- VISÃO GERAL — FUNIL VISUAL -->
+    <section id="visao">
+      <div class="sh"><h2>Funil Completo</h2><p>Volume e taxa de conversão entre cada etapa.</p></div>
+      <div class="funnel-visual" id="funnel-visual"></div>
+    </section>
+
+    <!-- MÉTRICAS PRINCIPAIS -->
+    <section id="metricas">
+      <div class="sh"><h2>Métricas Principais</h2><p>KPIs calculados do funil completo.</p></div>
+      <div class="metrics-grid">
+        <div class="mc hi">
+          <div class="mc-lbl">Faturamento Gerado</div>
+          <div class="mc-val" id="kpi-fat">—</div>
+          <div class="mc-sub">Vendas × Ticket médio</div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">CPL — Custo por Lead</div>
+          <div class="mc-val" id="kpi-cpl">—</div>
+          <div class="mc-sub">Investimento / Leads</div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">CAC — Custo por Cliente</div>
+          <div class="mc-val" id="kpi-cac">—</div>
+          <div class="mc-sub">Investimento / Vendas</div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">ROI de Mídia</div>
+          <div class="mc-val" id="kpi-roi">—</div>
+          <div class="mc-sub">Faturamento / Investimento</div>
+          <div class="mc-badge" id="kpi-roi-badge"></div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">CTR (Cliques / Impressões)</div>
+          <div class="mc-val" id="kpi-ctr">—</div>
+          <div class="mc-sub">Referência: 1–3%</div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">Tx. Conversão Geral</div>
+          <div class="mc-val" id="kpi-conv">—</div>
+          <div class="mc-sub">Alcance → Venda</div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">Show Rate</div>
+          <div class="mc-val" id="kpi-show">—</div>
+          <div class="mc-sub">Agendado → Realizado</div>
+          <div class="mc-badge" id="kpi-show-badge"></div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">Churn Rate</div>
+          <div class="mc-val" id="kpi-churn">—</div>
+          <div class="mc-sub">Cancelamentos / Base ativa</div>
+          <div class="mc-badge" id="kpi-churn-badge"></div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">Taxa de Abandono (Carrinho)</div>
+          <div class="mc-val" id="kpi-abandon">—</div>
+          <div class="mc-sub">Abandonados / Adicionados</div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">Tx. Fechamento (Proposta)</div>
+          <div class="mc-val" id="kpi-close">—</div>
+          <div class="mc-sub">Vendas / Propostas</div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">NPS</div>
+          <div class="mc-val" id="kpi-nps">—</div>
+          <div class="mc-sub">Satisfação pós-venda</div>
+          <div class="mc-badge" id="kpi-nps-badge"></div>
+        </div>
+        <div class="mc">
+          <div class="mc-lbl">Receita Recorrente Estimada</div>
+          <div class="mc-val" id="kpi-mrr">—</div>
+          <div class="mc-sub">Clientes ativos × Ticket</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GARGALOS -->
+    <section id="gargalos">
+      <div class="sh"><h2>Maiores Gargalos</h2><p>Etapas ordenadas por maior perda relativa de volume.</p></div>
+      <div class="bottleneck-list" id="bottleneck-list"></div>
+    </section>
+
+    <!-- CONVERSÕES WATERFALL -->
+    <section id="conversoes">
+      <div class="sh"><h2>Cascata de Conversão</h2><p>Taxa de conversão entre etapas consecutivas.</p></div>
+      <div class="waterfall" id="waterfall"></div>
+      <div class="chart-wrap" style="margin-top:2px">
+        <canvas id="funnelChart"></canvas>
+      </div>
+    </section>
+
+    <!-- BENCHMARKS -->
+    <section id="benchmarks">
+      <div class="sh"><h2>Benchmarks do Setor</h2><p>Seus números vs. referências de mercado para operações de serviço e vendas digitais.</p></div>
+      <table class="bench-table">
+        <thead>
+          <tr><th>Métrica</th><th>Fraco</th><th>Aceitável</th><th>Bom</th><th>Você</th><th>Status</th></tr>
+        </thead>
+        <tbody id="bench-tbody"></tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+
+<script>
+const DEFAULTS = {
+  alcance:50000,impressoes:120000,investimento:5000,
+  cliques:3500,acessos:3100,leads:310,conversas:180,mql:90,
+  agendamentos:45,reunioes:32,propostas:28,
+  carrinhos:22,abandonos:10,vendas:12,ticket:2500,
+  clientes_ativos:85,cancelamentos:4,recompras:8,nps:7.5
+};
+
+const $=id=>document.getElementById(id);
+const get=id=>parseFloat($(id).value)||0;
+const pct=(a,b)=>b>0?(a/b*100):0;
+const fmt=(n,d=0)=>n.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtR=(n,d=0)=>'R$ '+fmt(n,d);
+const fmtP=(n,d=1)=>fmt(n,d)+'%';
+
+let chartInst=null;
+let period='Mensal';
+
+function setPeriod(btn, p){
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  period=p;
+  $('hero-period').textContent=p;
+  update();
+}
+
+function calcData(){
+  const d={
+    alcance:get('alcance'),impressoes:get('impressoes'),investimento:get('investimento'),
+    cliques:get('cliques'),acessos:get('acessos'),leads:get('leads'),conversas:get('conversas'),
+    mql:get('mql'),agendamentos:get('agendamentos'),reunioes:get('reunioes'),propostas:get('propostas'),
+    carrinhos:get('carrinhos'),abandonos:get('abandonos'),vendas:get('vendas'),ticket:get('ticket'),
+    clientes_ativos:get('clientes_ativos'),cancelamentos:get('cancelamentos'),recompras:get('recompras'),nps:get('nps')
+  };
+
+  d.fat = d.vendas * d.ticket;
+  d.cpl = d.leads>0 ? d.investimento/d.leads : 0;
+  d.cac = d.vendas>0 ? d.investimento/d.vendas : 0;
+  d.roi = d.investimento>0 ? d.fat/d.investimento : 0;
+  d.ctr = pct(d.cliques, d.impressoes);
+  d.conv_geral = pct(d.vendas, d.alcance);
+  d.show_rate = pct(d.reunioes, d.agendamentos);
+  d.churn = pct(d.cancelamentos, d.clientes_ativos);
+  d.abandon_rate = pct(d.abandonos, d.carrinhos);
+  d.close_rate = pct(d.vendas, d.propostas);
+  d.mrr = d.clientes_ativos * d.ticket;
+
+  // conversion between stages
+  d.r_imp_alc = pct(d.impressoes, d.alcance);
+  d.r_cli_imp = pct(d.cliques, d.impressoes);
+  d.r_ace_cli = pct(d.acessos, d.cliques);
+  d.r_lead_ace = pct(d.leads, d.acessos);
+  d.r_conv_lead = pct(d.conversas, d.leads);
+  d.r_mql_conv = pct(d.mql, d.conversas);
+  d.r_age_mql = pct(d.agendamentos, d.mql);
+  d.r_reu_age = pct(d.reunioes, d.agendamentos);
+  d.r_prop_reu = pct(d.propostas, d.reunioes);
+  d.r_car_prop = pct(d.carrinhos, d.propostas);
+  d.r_venda_car = pct(d.vendas, d.carrinhos);
+
+  return d;
+}
+
+const STAGES = [
+  {id:'alcance',label:'Alcance',color:'#6366f1',group:'Awareness'},
+  {id:'impressoes',label:'Impressões',color:'#818cf8',group:'Awareness'},
+  {id:'cliques',label:'Cliques',color:'#3b82f6',group:'Tráfego'},
+  {id:'acessos',label:'Acessos LP',color:'#60a5fa',group:'Tráfego'},
+  {id:'leads',label:'Leads',color:'#0ea5e9',group:'Captação'},
+  {id:'conversas',label:'Conversas',color:'#22d3ee',group:'Engajamento'},
+  {id:'mql',label:'MQL',color:'#06b6d4',group:'Engajamento'},
+  {id:'agendamentos',label:'Agendamentos',color:'#1A6DE5',group:'Pipeline'},
+  {id:'reunioes',label:'Reuniões',color:'#3b82f6',group:'Pipeline'},
+  {id:'propostas',label:'Propostas',color:'#7c3aed',group:'Pipeline'},
+  {id:'carrinhos',label:'Intenções',color:'#8b5cf6',group:'Vendas'},
+  {id:'vendas',label:'Vendas',color:'#a855f7',group:'Vendas'},
+];
+
+function statusClass(rate, good, ok){
+  return rate>=good?'ok':rate>=ok?'warn':'bad';
+}
+
+function update(){
+  const d = calcData();
+
+  // ── FUNIL COMPACT ──
+  const fv = $('funnel-visual');
+  fv.innerHTML='';
+  let curGroup=null, groupEl=null;
+
+  STAGES.forEach((s,i)=>{
+    const val = get(s.id);
+    const prev = i>0 ? get(STAGES[i-1].id) : val;
+    const rate = i>0 ? pct(val,prev) : null;
+
+    if(s.group!==curGroup){
+      curGroup=s.group;
+      groupEl=document.createElement('div');
+      groupEl.className='fi-group';
+      groupEl.innerHTML=`<div class="fi-group-label">${s.group}</div>`;
+      fv.appendChild(groupEl);
+    }
+
+    const pCls = rate===null?'':rate>=50?'good':rate>=20?'warn':'bad';
+    const rateHtml = rate!==null
+      ? `<div class="fi-right"><span class="fi-pipe">|</span><span class="fi-pct ${pCls}">${fmtP(rate,1)}</span></div>`
+      : '';
+
+    const item=document.createElement('div');
+    item.className='fi-item';
+    item.innerHTML=`
+      <span class="fi-num" style="color:${s.color}">${fmt(val)}</span>
+      <span class="fi-mid"><span class="fi-dash">—</span><span class="fi-label">${s.label}</span></span>
+      ${rateHtml}
+    `;
+    groupEl.appendChild(item);
+  });
+
+  // ── KPIs ──
+  const setKpi=(id,val,cls='')=>{$(id).textContent=val;if(cls){$(id).className='mc-val '+cls;}};
+  const setBadge=(id,text,cls)=>{const b=$(id);if(b){b.textContent=text;b.className='mc-badge '+cls;}};
+
+  setKpi('kpi-fat', fmtR(d.fat));
+  setKpi('kpi-cpl', d.cpl?fmtR(d.cpl):'—');
+  setKpi('kpi-cac', d.cac?fmtR(d.cac):'—');
+  const roiCls = d.roi>=5?'pos':d.roi>=2?'warn':'neg';
+  setKpi('kpi-roi', d.roi?fmt(d.roi,1)+'×':'—', roiCls);
+  setBadge('kpi-roi-badge', d.roi>=5?'Excelente':d.roi>=2?'Aceitável':'Crítico', d.roi>=5?'badge-ok':d.roi>=2?'badge-warn':'badge-bad');
+  const ctrCls = d.ctr>=2?'pos':d.ctr>=0.8?'warn':'neg';
+  setKpi('kpi-ctr', fmtP(d.ctr,2), ctrCls);
+  setKpi('kpi-conv', fmtP(d.conv_geral,3));
+  const showCls = d.show_rate>=75?'pos':d.show_rate>=50?'warn':'neg';
+  setKpi('kpi-show', fmtP(d.show_rate,1), showCls);
+  setBadge('kpi-show-badge', d.show_rate>=75?'Bom':d.show_rate>=50?'Atenção':'Crítico', d.show_rate>=75?'badge-ok':d.show_rate>=50?'badge-warn':'badge-bad');
+  const churnCls = d.churn<=3?'pos':d.churn<=7?'warn':'neg';
+  setKpi('kpi-churn', fmtP(d.churn,1), churnCls);
+  setBadge('kpi-churn-badge', d.churn<=3?'Saudável':d.churn<=7?'Atenção':'Crítico', d.churn<=3?'badge-ok':d.churn<=7?'badge-warn':'badge-bad');
+  setKpi('kpi-abandon', fmtP(d.abandon_rate,1), d.abandon_rate<=40?'pos':d.abandon_rate<=65?'warn':'neg');
+  setKpi('kpi-close', fmtP(d.close_rate,1), d.close_rate>=40?'pos':d.close_rate>=20?'warn':'neg');
+  const npsCls = d.nps>=8?'pos':d.nps>=6?'warn':'neg';
+  setKpi('kpi-nps', fmt(d.nps,1), npsCls);
+  setBadge('kpi-nps-badge', d.nps>=9?'Promotor':d.nps>=7?'Neutro':'Detrator', d.nps>=9?'badge-ok':d.nps>=7?'badge-warn':'badge-bad');
+  setKpi('kpi-mrr', fmtR(d.mrr));
+
+  // ── GARGALOS ──
+  const drops = [
+    {name:'Impressões → Cliques (CTR)',from:d.impressoes,to:d.cliques,rate:d.r_cli_imp,good:2,ok:0.8,unit:'%',hint:'CTR baixo indica problema de criativo, audiência ou oferta.'},
+    {name:'Acessos → Leads (Captação)',from:d.acessos,to:d.leads,rate:d.r_lead_ace,good:15,ok:5,unit:'%',hint:'Taxa baixa indica problema na landing page, copy ou formulário.'},
+    {name:'Leads → Conversas (Engajamento)',from:d.leads,to:d.conversas,rate:d.r_conv_lead,good:60,ok:30,unit:'%',hint:'Muitos leads que não respondem = problema de qualidade ou abordagem.'},
+    {name:'MQL → Agendamentos (Qualificação)',from:d.mql,to:d.agendamentos,rate:d.r_age_mql,good:60,ok:30,unit:'%',hint:'Leads qualificados não agendando = problema no follow-up ou oferta.'},
+    {name:'Agendamentos → Realizados (Show Rate)',from:d.agendamentos,to:d.reunioes,rate:d.r_reu_age,good:75,ok:50,unit:'%',hint:'Show rate baixo = confirmação fraca ou público não aquecido.'},
+    {name:'Propostas → Vendas (Fechamento)',from:d.propostas,to:d.vendas,rate:d.r_venda_car>0?d.close_rate:d.close_rate,good:40,ok:20,unit:'%',hint:'Taxa de fechamento baixa = objeção de preço, urgência ou fit.'},
+    {name:'Carrinho → Compra (Abandono)',from:d.carrinhos,to:d.vendas,rate:100-d.abandon_rate,good:60,ok:35,unit:'%',hint:'Alto abandono = problema na etapa de pagamento ou última objeção.'},
+  ].filter(b=>b.from>0&&b.to>0);
+
+  drops.sort((a,b)=>a.rate-b.rate);
+
+  const bl = $('bottleneck-list');
+  bl.innerHTML='';
+  drops.slice(0,6).forEach((bn,i)=>{
+    const loss = bn.from - bn.to;
+    const sc = bn.rate>=bn.good?'ok':bn.rate>=bn.ok?'warn':'critical';
+    const col = sc==='ok'?'var(--pos)':sc==='warn'?'var(--warn)':'var(--neg)';
+    bl.innerHTML+=`
+      <div class="bn ${sc}">
+        <div class="bn-rank">${i+1}</div>
+        <div>
+          <div class="bn-name">${bn.name}</div>
+          <div class="bn-desc">${bn.hint}</div>
+        </div>
+        <div>
+          <div class="bn-loss" style="color:${col}">${fmtP(bn.rate,1)}</div>
+          <div class="bn-loss-label">−${fmt(loss)} pessoas</div>
+        </div>
+      </div>
+    `;
+  });
+
+  // ── WATERFALL ──
+  const wfSteps = [
+    {label:'Alcance',val:d.alcance,rate:null,color:'#6366f1'},
+    {label:'Cliques',val:d.cliques,rate:d.r_cli_imp,color:'#3b82f6'},
+    {label:'Leads',val:d.leads,rate:d.r_lead_ace,color:'#0ea5e9'},
+    {label:'Conversas',val:d.conversas,rate:d.r_conv_lead,color:'#06b6d4'},
+    {label:'MQL',val:d.mql,rate:d.r_mql_conv,color:'#1A6DE5'},
+    {label:'Reuniões',val:d.reunioes,rate:d.r_reu_age,color:'#7c3aed'},
+    {label:'Vendas',val:d.vendas,rate:d.close_rate,color:'#a855f7'},
+  ];
+
+  const wf=$('waterfall');
+  wf.innerHTML='';
+  wfSteps.forEach(s=>{
+    const rCls = s.rate===null?'rate-na':s.rate>=50?'rate-pos':s.rate>=25?'rate-warn':'rate-neg';
+    wf.innerHTML+=`
+      <div class="wf-step">
+        <div class="wf-val" style="color:${s.color}">${fmt(s.val)}</div>
+        <div class="wf-name">${s.label}</div>
+        <span class="wf-rate ${rCls}">${s.rate!==null?fmtP(s.rate,1):'—'}</span>
+      </div>
+    `;
+  });
+
+  // ── CHART ──
+  if(chartInst) chartInst.destroy();
+  const ctx=$('funnelChart').getContext('2d');
+  chartInst=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:wfSteps.map(s=>s.label),
+      datasets:[{
+        data:wfSteps.map(s=>s.val),
+        backgroundColor:wfSteps.map(s=>s.color+'44'),
+        borderColor:wfSteps.map(s=>s.color),
+        borderWidth:2,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          callbacks:{label:ctx=>' '+fmt(ctx.parsed.y,0)+' pessoas'},
+          backgroundColor:'rgba(6,13,13,.95)',borderColor:'rgba(26,109,229,.3)',borderWidth:1,
+          titleColor:'rgba(255,253,243,.7)',bodyColor:'rgba(255,253,243,.85)',padding:10,
+        }
+      },
+      scales:{
+        x:{grid:{color:'rgba(26,109,229,.06)'},ticks:{color:'rgba(255,253,243,.35)',font:{size:11}}},
+        y:{grid:{color:'rgba(26,109,229,.06)'},ticks:{color:'rgba(255,253,243,.3)',font:{size:10},callback:v=>fmt(v)}}
+      }
+    }
+  });
+
+  // ── BENCHMARKS ──
+  const BENCH=[
+    {metric:'CTR (Cliques/Impressões)',fraco:'< 0.5%',ok:'0.5–1%',bom:'> 2%',your:fmtP(d.ctr,2),status:d.ctr>=2?'ok':d.ctr>=0.5?'warn':'bad'},
+    {metric:'Taxa de Captação de Lead',fraco:'< 3%',ok:'3–8%',bom:'> 15%',your:fmtP(d.r_lead_ace,1),status:d.r_lead_ace>=15?'ok':d.r_lead_ace>=3?'warn':'bad'},
+    {metric:'Lead → Conversa',fraco:'< 20%',ok:'20–40%',bom:'> 60%',your:fmtP(d.r_conv_lead,1),status:d.r_conv_lead>=60?'ok':d.r_conv_lead>=20?'warn':'bad'},
+    {metric:'Show Rate',fraco:'< 40%',ok:'40–65%',bom:'> 75%',your:fmtP(d.show_rate,1),status:d.show_rate>=75?'ok':d.show_rate>=40?'warn':'bad'},
+    {metric:'Taxa de Fechamento',fraco:'< 10%',ok:'10–25%',bom:'> 40%',your:fmtP(d.close_rate,1),status:d.close_rate>=40?'ok':d.close_rate>=10?'warn':'bad'},
+    {metric:'Taxa de Abandono (Carrinho)',fraco:'> 80%',ok:'50–80%',bom:'< 40%',your:fmtP(d.abandon_rate,1),status:d.abandon_rate<=40?'ok':d.abandon_rate<=80?'warn':'bad'},
+    {metric:'Churn Mensal',fraco:'> 10%',ok:'4–10%',bom:'< 3%',your:fmtP(d.churn,1),status:d.churn<=3?'ok':d.churn<=10?'warn':'bad'},
+    {metric:'NPS',fraco:'< 6',ok:'6–7.9',bom:'≥ 8',your:fmt(d.nps,1),status:d.nps>=8?'ok':d.nps>=6?'warn':'bad'},
+    {metric:'ROI de Mídia',fraco:'< 1×',ok:'1–3×',bom:'> 5×',your:d.roi?fmt(d.roi,1)+'×':'—',status:d.roi>=5?'ok':d.roi>=1?'warn':'bad'},
+  ];
+
+  const tb=$('bench-tbody');
+  tb.innerHTML='';
+  BENCH.forEach(b=>{
+    const cls=b.status==='ok'?'ok':b.status==='warn'?'warn':'bad';
+    tb.innerHTML+=`<tr>
+      <td>${b.metric}</td>
+      <td>${b.fraco}</td>
+      <td>${b.ok}</td>
+      <td>${b.bom}</td>
+      <td class="your ${cls}">${b.your}</td>
+      <td><span class="${cls==='ok'?'badge-ok':cls==='warn'?'badge-warn':'badge-bad'} fv-badge">${cls==='ok'?'Bom':cls==='warn'?'Atenção':'Crítico'}</span></td>
+    </tr>`;
+  });
+}
+
+// NAV ACTIVE
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));
+  });
+},{threshold:.3}).observe.length&&sections.forEach(s=>new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id)); });
+},{threshold:.3}).observe(s));
+
+function resetInputs(){ Object.entries(DEFAULTS).forEach(([k,v])=>{if($(k))$(k).value=v;}); update(); }
+document.querySelectorAll('input[type="number"]').forEach(el=>el.addEventListener('input',update));
+
+update();
+</script>
+</body>
+</html>
