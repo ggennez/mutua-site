@@ -17,8 +17,10 @@ mas tem dois problemas:
    metadado pequeno dentro do hero (ao lado da data), não como o centro da
    mensagem — apesar de a proposta ser inteiramente para eles.
 
-Há também uma inconsistência de marca: a página usa **"Muthua"** (com H) em
-todos os lugares, enquanto o resto do site usa **"Mutua"**.
+A página usa **"Muthua"** (com H) como nome de marca em todas as menções
+(nav, hero, rodapé) — confirmado como o nome correto desta proposta pelo
+domínio ao vivo `muthuadesign.com.br`. Esse spelling é mantido como está;
+não há mudança de branding nesta página.
 
 ## Objetivo
 
@@ -29,7 +31,6 @@ Redesenhar a página com um conceito visual novo — **"Estúdio em Cena"**
   não como metadado.
 - A elaboração visual vem de composição/densidade (grid bento assimétrico),
   não de mais efeitos de animação.
-- A marca "Mutua" fica consistente com o resto do site.
 - A página tem um botão para baixar a proposta como PDF leve.
 
 ## Fora de escopo
@@ -64,8 +65,8 @@ Redesenhar a página com um conceito visual novo — **"Estúdio em Cena"**
   - Hover sutil nos cards (leve `translateY` + sombra), reforçando a
     sensação de superfícies "tangíveis".
   - Mantém os contadores animados já existentes.
-- **Branding**: substitui todas as ocorrências de "Muthua" por "Mutua"
-  (nav, ticker/footer, masthead, textos).
+- **Branding**: mantém "Muthua" (com H) em todas as menções — ver
+  Contexto. Nenhuma alteração de nome de marca nesta página.
 
 ## Hero (núcleo da mudança)
 
@@ -73,7 +74,7 @@ Consolida o masthead gigante ("Vivá") + a seção hero atual em **um único
 grid bento assimétrico**:
 
 - **Card grande (~2/3 da largura, fundo dark com leve gradiente no canto)**:
-  - Eyebrow: "Proposta de Parceria · Mutua × Vivá Pilates e Saúde"
+  - Eyebrow: "Proposta de Parceria · Muthua × Vivá Pilates e Saúde"
   - Manchete enorme em serifa: **"Olá, Érica e Vinícius."**
   - Parágrafo curto, tom de carta pessoal (adaptado do parágrafo atual do
     hero), explicando o que a proposta cobre.
@@ -116,18 +117,18 @@ primeiro instante, sem depender de fundo animado.
 - **Footer**: deixa de ser uma linha única de texto e passa a ser uma
   fileira de 3-4 células bento (mesmo grid de cantos retos, `gap: 1px`),
   ecoando o peso visual do hero:
-  - Célula maior: wordmark "Mutua" em Fraunces + uma linha de assinatura
-    curta com o posicionamento da Mutua.
+  - Célula maior: wordmark "Muthua" em Fraunces + uma linha de assinatura
+    curta com o posicionamento da Muthua.
   - Célula com contato direto via WhatsApp (reaproveita link/mensagem já
     usados nos CTAs).
   - Célula com os metadados da proposta ("11 de junho de 2026 · Proposta
     Nº 001") — eco do card da coluna direita do hero.
-  - Célula pequena com o copyright ("© 2026 Mutua").
+  - Célula pequena com o copyright ("© 2026 Muthua").
 
 ## Download em PDF
 
 - Botão "Baixar proposta (PDF)" na nav, estilo secundário ao lado do CTA
-  "Falar com a Mutua" — sempre visível.
+  "Falar com a Muthua" — sempre visível.
 - Aciona `window.print()` — sem bibliotecas novas.
 - Stylesheet `@media print` dedicado:
   - Esconde nav, barra de progresso de scroll, blobs/gradientes decorativos
@@ -137,7 +138,7 @@ primeiro instante, sem depender de fundo animado.
   - Simplifica os grids bento para layout de documento (1-2 colunas), com
     `page-break-inside: avoid` nos cards e quebras de página entre as
     seções principais.
-  - Adiciona um cabeçalho impresso: "Mutua × Vivá Pilates e Saúde —
+  - Adiciona um cabeçalho impresso: "Muthua × Vivá Pilates e Saúde —
     Proposta de Parceria · 11 de junho de 2026".
   - Links de WhatsApp aparecem como texto com o número visível (não são
     clicáveis no papel).
