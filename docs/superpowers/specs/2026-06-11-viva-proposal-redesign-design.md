@@ -55,8 +55,15 @@ Redesenhar a página com um conceito visual novo — **"Estúdio em Cena"**
   `gap: 1px` sobre fundo compartilhado — o mesmo padrão visual das seções
   Stats/Pilares da home principal, aplicado de forma mais densa.
 - **Movimento**: remove o fundo animado em gradiente full-page, o overlay
-  de grain e o ticker grande. Mantém o padrão de scroll-reveal via
-  `IntersectionObserver` e os contadores animados já existentes.
+  de grain e o ticker grande — substitui por movimento mais refinado e
+  intencional:
+  - Scroll-reveal via `IntersectionObserver` com easing suave
+    (`cubic-bezier(.16,1,.3,1)`), estendido a todos os cards bento, com
+    **delay escalonado** entre células do mesmo grid (cascata sutil ao
+    rolar a página).
+  - Hover sutil nos cards (leve `translateY` + sombra), reforçando a
+    sensação de superfícies "tangíveis".
+  - Mantém os contadores animados já existentes.
 - **Branding**: substitui todas as ocorrências de "Muthua" por "Mutua"
   (nav, ticker/footer, masthead, textos).
 
@@ -82,6 +89,12 @@ grid bento assimétrico**:
 **Responsivo**: em mobile, empilha em coluna única começando pelo card
 grande.
 
+**Entrada animada**: ao carregar a página, os 4 cards do hero (o grande +
+os 3 da coluna direita) entram em sequência — fade + leve `translateY`,
+mesmo easing do scroll-reveal (`cubic-bezier(.16,1,.3,1)`), com delay
+escalonado de ~80-120ms entre eles. Dá ao hero uma sensação "viva" no
+primeiro instante, sem depender de fundo animado.
+
 ## Demais seções (mesma linguagem bento)
 
 - **Diagnóstico** ("Presença, aquisição e crescimento"): os 3 cards atuais
@@ -96,9 +109,20 @@ grande.
 - **Contrato**: o layout atual (`.contract`, já quase-bento com 1 item
   grande + 2 menores) é mantido na estrutura, só recebe o novo estilo
   visual.
-- **CTA final**: fecha no mesmo tom de carta pessoal — algo como "Érica,
-  Vinícius — vamos começar?" — mantendo o botão de WhatsApp existente.
-- **Footer**: simplificado, com branding "Mutua" corrigido.
+- **CTA final**: manchete diz exatamente "Érica e Vinícius, vamos colocar
+  a Vivá em movimento?" — eco personalizado do CTA atual ("Vamos colocar
+  o studio em movimento?"), mantendo o tom de carta pessoal e o botão de
+  WhatsApp existente.
+- **Footer**: deixa de ser uma linha única de texto e passa a ser uma
+  fileira de 3-4 células bento (mesmo grid de cantos retos, `gap: 1px`),
+  ecoando o peso visual do hero:
+  - Célula maior: wordmark "Mutua" em Fraunces + uma linha de assinatura
+    curta com o posicionamento da Mutua.
+  - Célula com contato direto via WhatsApp (reaproveita link/mensagem já
+    usados nos CTAs).
+  - Célula com os metadados da proposta ("11 de junho de 2026 · Proposta
+    Nº 001") — eco do card da coluna direita do hero.
+  - Célula pequena com o copyright ("© 2026 Mutua").
 
 ## Download em PDF
 
