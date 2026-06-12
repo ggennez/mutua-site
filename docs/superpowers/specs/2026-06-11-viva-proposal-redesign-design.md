@@ -30,6 +30,7 @@ Redesenhar a página com um conceito visual novo — **"Estúdio em Cena"**
 - A elaboração visual vem de composição/densidade (grid bento assimétrico),
   não de mais efeitos de animação.
 - A marca "Mutua" fica consistente com o resto do site.
+- A página tem um botão para baixar a proposta como PDF leve.
 
 ## Fora de escopo
 
@@ -99,6 +100,30 @@ grande.
   Vinícius — vamos começar?" — mantendo o botão de WhatsApp existente.
 - **Footer**: simplificado, com branding "Mutua" corrigido.
 
+## Download em PDF
+
+- Botão "Baixar proposta (PDF)" na nav, estilo secundário ao lado do CTA
+  "Falar com a Mutua" — sempre visível.
+- Aciona `window.print()` — sem bibliotecas novas.
+- Stylesheet `@media print` dedicado:
+  - Esconde nav, barra de progresso de scroll, blobs/gradientes decorativos
+    e o próprio botão de download.
+  - Converte seções dark para fundo claro/texto escuro (legibilidade e
+    economia de tinta no papel).
+  - Simplifica os grids bento para layout de documento (1-2 colunas), com
+    `page-break-inside: avoid` nos cards e quebras de página entre as
+    seções principais.
+  - Adiciona um cabeçalho impresso: "Mutua × Vivá Pilates e Saúde —
+    Proposta de Parceria · 11 de junho de 2026".
+  - Links de WhatsApp aparecem como texto com o número visível (não são
+    clicáveis no papel).
+- Contadores animados (`data-counter`): o evento `beforeprint` dispara
+  todos os contadores (além do trigger normal por scroll), garantindo que
+  valores finais — não "0" — apareçam no PDF.
+- Resultado: PDF gerado pelo navegador, texto selecionável/vetorial
+  (leve), sem dependências adicionais, sempre sincronizado com o conteúdo
+  da página.
+
 ## Abordagem técnica
 
 - Continua como **arquivo HTML único** em
@@ -110,5 +135,7 @@ grande.
   - Número de WhatsApp e mensagens pré-preenchidas por plano/CTA.
   - Termos de contrato (3 meses de experiência + 12 meses de contrato).
   - Lógica de scroll-reveal e contadores animados (adaptada ao novo HTML).
+- Adiciona o stylesheet `@media print` e o botão/handler de download
+  descritos na seção "Download em PDF".
 - Sem novos assets de imagem — elementos gráficos (formas, grid, tipografia)
   fazem o trabalho visual.
