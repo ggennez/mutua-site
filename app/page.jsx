@@ -55,8 +55,8 @@ const css = `
   /* ── pill button ──────────────────────────────────────────── */
   .btn-pill { display:inline-flex; align-items:center; gap:14px; font-family:Inter,sans-serif; font-size:14px; font-weight:600; color:#fff; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); border-radius:999px; padding:10px 10px 10px 28px; text-decoration:none; transition:background .25s,border-color .25s; white-space:nowrap; }
   .btn-pill:hover { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.3); }
-  .pill-circle { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#103FEA 0%,#1A6DE5 100%); display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .btn-pill-solid { background:linear-gradient(135deg,#103FEA 0%,#1A6DE5 100%); border-color:transparent; padding:12px 12px 12px 30px; font-size:15px; }
+  .pill-circle { width:34px; height:34px; border-radius:50%; background:#1A6DE5; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .btn-pill-solid { background:#1A6DE5; border-color:transparent; padding:12px 12px 12px 30px; font-size:15px; }
   .btn-pill-solid:hover { opacity:.88; }
   .btn-pill-solid .pill-circle { background:rgba(0,0,0,.22); }
 
@@ -414,7 +414,7 @@ function Hero() {
             <SL text="Revenue Operations" style={{ marginBottom: '20px' }} />
             <h1 style={{ fontFamily: s.serif, fontSize: 'clamp(40px,5.5vw,80px)', fontWeight: 700, color: '#fff', lineHeight: 0.94, letterSpacing: '-2px', margin: 0 }}>
               Crescimento<br />
-              <em style={{ fontStyle: 'italic', background: s.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>previsível.</em>
+              <em style={{ fontStyle: 'italic', color: '#fff' }}>previsível.</em>
             </h1>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
@@ -520,7 +520,7 @@ function ProofCards() {
               }}>
                 {c.visual}
               </div>
-              <div style={{ fontFamily: s.serif, fontSize: 'clamp(48px,5vw,72px)', fontWeight: 700, background: s.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1, marginBottom: '12px' }}>
+              <div style={{ fontFamily: s.serif, fontSize: 'clamp(48px,5vw,72px)', fontWeight: 700, color: '#fff', lineHeight: 1, marginBottom: '12px' }}>
                 {c.metric}
               </div>
               <h3 style={{ fontFamily: s.serif, fontSize: 'clamp(18px,1.8vw,22px)', fontWeight: 700, color: '#fff', lineHeight: 1.2, letterSpacing: '-0.3px', margin: '0 0 10px' }}>
@@ -601,10 +601,10 @@ function Servicos() {
             <div key={i} className={`svc-card reveal d${i + 1}`}>
               {p.icon}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                <span style={{ fontFamily: s.serif, fontSize: 'clamp(36px,4vw,58px)', fontWeight: 700, lineHeight: 1, background: s.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{p.num}</span>
+                <span style={{ fontFamily: s.serif, fontSize: 'clamp(36px,4vw,58px)', fontWeight: 700, lineHeight: 1, color: 'rgba(255,255,255,0.22)' }}>{p.num}</span>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontFamily: s.sans, fontSize: '10px', fontWeight: 600, color: 'rgba(255,255,255,0.28)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{p.tipo}</div>
-                  {p.badge && <div style={{ fontFamily: s.sans, fontSize: '9px', fontWeight: 700, color: '#fff', background: s.grad, padding: '2px 8px', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '5px', display: 'inline-block' }}>{p.badge}</div>}
+                  {p.badge && <div style={{ fontFamily: s.sans, fontSize: '9px', fontWeight: 700, color: '#fff', background: '#1A6DE5', padding: '2px 8px', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '5px', display: 'inline-block' }}>{p.badge}</div>}
                 </div>
               </div>
               <div style={{ fontFamily: s.sans, fontSize: '10px', fontWeight: 600, color: s.blue, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '10px' }}>{p.name}</div>
@@ -685,7 +685,7 @@ function Framework() {
         <div className="acelera-grid">
           {steps.map((st, i) => (
             <div key={i} className="acelera-cell">
-              <div style={{ fontFamily: s.serif, fontSize: 'clamp(44px,5vw,68px)', fontWeight: 700, lineHeight: 0.9, background: s.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '18px' }}>{st.letter}</div>
+              <div style={{ fontFamily: s.serif, fontSize: 'clamp(44px,5vw,68px)', fontWeight: 700, lineHeight: 0.9, color: '#fff', marginBottom: '18px' }}>{st.letter}</div>
               <div style={{ fontFamily: s.sans, fontSize: '11px', fontWeight: 600, color: '#fff', marginBottom: '8px', letterSpacing: '0.02em' }}>{st.word}</div>
               <p style={{ fontFamily: s.sans, fontSize: '11px', fontWeight: 300, color: 'rgba(255,255,255,0.36)', lineHeight: 1.6, margin: 0 }}>{st.desc}</p>
             </div>
@@ -723,7 +723,7 @@ function Parceria() {
         <div className="how-grid">
           {steps.map((st, i) => (
             <div key={i} className={`how-cell reveal d${i + 1}`}>
-              <div style={{ fontFamily: s.serif, fontSize: 'clamp(36px,3.5vw,52px)', fontWeight: 700, background: s.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1, marginBottom: '20px' }}>{st.n}</div>
+              <div style={{ fontFamily: s.serif, fontSize: 'clamp(36px,3.5vw,52px)', fontWeight: 700, color: 'rgba(255,255,255,0.2)', lineHeight: 1, marginBottom: '20px' }}>{st.n}</div>
               <h3 style={{ fontFamily: s.serif, fontSize: 'clamp(18px,1.8vw,22px)', fontWeight: 700, color: '#fff', lineHeight: 1.1, margin: '0 0 12px', letterSpacing: '-0.3px' }}>{st.title}</h3>
               <p style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 300, color: 'rgba(255,255,255,0.44)', lineHeight: 1.72, margin: '0 0 24px' }}>{st.desc}</p>
               <div style={{ width: '20px', height: '1px', background: `rgba(26,109,229,0.4)` }} />
@@ -764,7 +764,7 @@ function CTA() {
         <SL text="Pronto para crescer" style={{ marginBottom: '28px' }} />
         <h2 className="reveal" style={{ fontFamily: s.serif, fontSize: 'clamp(36px,6vw,92px)', fontWeight: 700, color: '#fff', lineHeight: 0.92, letterSpacing: '-2.5px', marginBottom: '48px' }}>
           Seu próximo{' '}
-          <em style={{ fontStyle: 'italic', background: s.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>patamar</em>
+          <em style={{ fontStyle: 'italic', color: '#fff' }}>patamar</em>
           <br />começa agora.
         </h2>
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>

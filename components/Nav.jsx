@@ -72,7 +72,7 @@ export default function Nav() {
             fontSize: '14px',
             fontWeight: 600,
             color: '#fff',
-            background: 'linear-gradient(135deg,#103FEA 0%,#1A6DE5 60%,#0a2fa8 100%)',
+            background: '#1A6DE5',
             padding: '10px 22px',
             transition: 'opacity 0.2s',
             textDecoration: 'none',
