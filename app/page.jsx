@@ -4,20 +4,17 @@ import Nav from '../components/Nav';
 import Link from 'next/link';
 
 const s = {
-  // Tokens
   blue: '#1A6DE5',
   blue2: '#103FEA',
   dark: '#060D0D',
   cream: '#FFFDF3',
   gray: '#E5E5E5',
   grad: 'linear-gradient(135deg,#103FEA 0%,#1A6DE5 60%,#0a2fa8 100%)',
-
-  // Typography helpers
   serif: 'Fraunces, serif',
   sans: 'Inter, sans-serif',
 };
 
-/* ─── tiny reusable components ─────────────────────────── */
+/* ─── shared components ─────────────────────────────────── */
 
 function Badge({ children }) {
   return (
@@ -53,29 +50,11 @@ function SectionTitle({ children, light }) {
   );
 }
 
-function Pill({ children }) {
-  return (
-    <span style={{
-      display: 'inline-block',
-      fontFamily: s.sans,
-      fontSize: '12px',
-      fontWeight: 600,
-      color: s.blue,
-      background: 'rgba(26,109,229,0.1)',
-      padding: '4px 14px',
-      marginRight: '8px',
-      marginBottom: '8px',
-    }}>
-      {children}
-    </span>
-  );
-}
-
 /* ─── HERO ──────────────────────────────────────────────── */
 function Hero() {
   return (
     <section style={{
-      minHeight: '100vh',
+      minHeight: '100dvh',
       background: s.dark,
       display: 'flex',
       alignItems: 'center',
@@ -83,28 +62,28 @@ function Hero() {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* gradient accent */}
       <div style={{
         position: 'absolute',
-        top: '-20%',
-        right: '-10%',
-        width: '600px',
-        height: '600px',
-        background: 'radial-gradient(circle, rgba(16,63,234,0.3) 0%, transparent 70%)',
+        top: 0,
+        right: 0,
+        width: '55vw',
+        height: '100%',
+        background: 'radial-gradient(ellipse at 70% 40%, rgba(16,63,234,0.18) 0%, transparent 65%)',
         pointerEvents: 'none',
       }} />
 
-      <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', position: 'relative' }}>
         <Badge>Revenue Operations & Growth Intelligence</Badge>
 
         <h1 style={{
           fontFamily: s.serif,
-          fontSize: 'clamp(42px,6vw,80px)',
+          fontSize: 'clamp(44px,6vw,80px)',
           fontWeight: 700,
           lineHeight: 1.05,
           color: '#fff',
           marginBottom: '28px',
           letterSpacing: '-1px',
+          maxWidth: '800px',
         }}>
           Crescimento previsível.<br />
           <span style={{ background: s.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -115,43 +94,47 @@ function Hero() {
         <p style={{
           fontFamily: s.sans,
           fontSize: '18px',
-          color: 'rgba(255,255,255,0.65)',
-          maxWidth: '540px',
+          color: 'rgba(255,255,255,0.6)',
+          maxWidth: '480px',
           lineHeight: 1.7,
           marginBottom: '48px',
         }}>
-          Não somos uma agência de marketing. Somos uma operação de Revenue Ops que transforma funis, métricas e processos em crescimento previsível e escalável.
+          Não somos uma agência de marketing. Somos Revenue Ops, transformando funis e métricas em crescimento previsível.
         </p>
 
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-          <Link href="#contato" style={{
-            fontFamily: s.sans,
-            fontSize: '15px',
-            fontWeight: 600,
-            color: '#fff',
-            background: s.grad,
-            padding: '16px 36px',
-            display: 'inline-block',
-            transition: 'opacity 0.2s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-          onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+          <Link
+            href="#contato"
+            style={{
+              fontFamily: s.sans,
+              fontSize: '15px',
+              fontWeight: 600,
+              color: '#fff',
+              background: s.grad,
+              padding: '16px 36px',
+              display: 'inline-block',
+              transition: 'opacity 0.2s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
           >
             Diagnóstico gratuito
           </Link>
 
-          <Link href="#metodologia" style={{
-            fontFamily: s.sans,
-            fontSize: '15px',
-            fontWeight: 500,
-            color: 'rgba(255,255,255,0.8)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            padding: '16px 36px',
-            display: 'inline-block',
-            transition: 'border-color 0.2s, color 0.2s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(255,255,255,0.6)'; e.currentTarget.style.color='#fff'; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,0.2)'; e.currentTarget.style.color='rgba(255,255,255,0.8)'; }}
+          <Link
+            href="#metodologia"
+            style={{
+              fontFamily: s.sans,
+              fontSize: '15px',
+              fontWeight: 500,
+              color: 'rgba(255,255,255,0.8)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              padding: '16px 36px',
+              display: 'inline-block',
+              transition: 'border-color 0.2s, color 0.2s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'; e.currentTarget.style.color = '#fff'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; }}
           >
             Ver metodologia
           </Link>
@@ -180,13 +163,10 @@ function Stats() {
         background: 'rgba(255,255,255,0.06)',
       }}>
         {items.map((it, i) => (
-          <div key={i} style={{
-            background: '#0d1117',
-            padding: '48px 40px',
-          }}>
+          <div key={i} style={{ background: '#0d1117', padding: '48px 40px' }}>
             <div style={{
               fontFamily: s.serif,
-              fontSize: '52px',
+              fontSize: '56px',
               fontWeight: 700,
               background: s.grad,
               WebkitBackgroundClip: 'text',
@@ -199,7 +179,7 @@ function Stats() {
             <p style={{
               fontFamily: s.sans,
               fontSize: '15px',
-              color: 'rgba(255,255,255,0.55)',
+              color: 'rgba(255,255,255,0.5)',
               lineHeight: 1.6,
             }}>
               {it.label}
@@ -211,7 +191,8 @@ function Stats() {
   );
 }
 
-/* ─── METODOLOGIA (A.C.E.L.E.R.A) ──────────────────────── */
+/* ─── METODOLOGIA ───────────────────────────────────────── */
+/* no badge — eyebrow budget preserved for Servicos + ComoFunciona */
 function Metodologia() {
   const steps = [
     { letter: 'A', word: 'Aquisição', desc: 'Estrutura de canais, tráfego pago, orgânico e parcerias com rastreamento de origem.' },
@@ -224,22 +205,21 @@ function Metodologia() {
   ];
 
   return (
-    <section id="metodologia" style={{ background: s.cream, padding: '100px 40px' }}>
+    <section id="metodologia" style={{ background: s.dark, padding: '100px 40px' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <Badge>Metodologia proprietária</Badge>
-        <SectionTitle>Framework A.C.E.L.E.R.A</SectionTitle>
+        <SectionTitle light>Framework A.C.E.L.E.R.A</SectionTitle>
         <p style={{
           fontFamily: s.sans,
           fontSize: '17px',
-          color: 'rgba(6,13,13,0.65)',
+          color: 'rgba(255,255,255,0.55)',
           maxWidth: '520px',
           lineHeight: 1.7,
           marginBottom: '60px',
         }}>
-          Sete camadas integradas que cobrem todo o ciclo de receita — da atração à retenção.
+          Sete camadas integradas cobrindo todo o ciclo de receita, da atração à retenção.
         </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           {steps.map((st, i) => (
             <div key={i} style={{
               display: 'grid',
@@ -247,7 +227,7 @@ function Metodologia() {
               alignItems: 'center',
               gap: '32px',
               padding: '28px 0',
-              borderBottom: i < steps.length - 1 ? `1px solid ${s.gray}` : 'none',
+              borderBottom: i < steps.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
             }}>
               <div style={{
                 fontFamily: s.serif,
@@ -264,14 +244,14 @@ function Metodologia() {
                 fontFamily: s.serif,
                 fontSize: '18px',
                 fontWeight: 600,
-                color: s.dark,
+                color: '#fff',
               }}>
                 {st.word}
               </div>
               <p style={{
                 fontFamily: s.sans,
                 fontSize: '15px',
-                color: 'rgba(6,13,13,0.6)',
+                color: 'rgba(255,255,255,0.5)',
                 lineHeight: 1.6,
               }}>
                 {st.desc}
@@ -284,94 +264,127 @@ function Metodologia() {
   );
 }
 
-/* ─── TRÊS PILARES ──────────────────────────────────────── */
+/* ─── PILARES ───────────────────────────────────────────── */
+/* bento 2+1: card 1 featured (spans 2 rows), cards 2+3 stacked right */
+/* no badge — eyebrow budget saved */
 function Pilares() {
-  const items = [
-    {
-      n: '01',
-      title: 'Dados & Rastreamento',
-      desc: 'Toda decisão baseada em dados reais. Implementamos tracking, atribuição e analytics que mostram o que realmente gera receita.',
-      tags: ['GA4', 'GTM', 'Pixel', 'CRM', 'Attribution'],
-    },
-    {
-      n: '02',
-      title: 'Operações de Funil',
-      desc: 'Mapeamos e otimizamos cada etapa do funil — do primeiro clique à retenção. Eliminamos gargalos e aumentamos a velocidade de receita.',
-      tags: ['CRO', 'Funil', 'Automação', 'Lead Score'],
-    },
-    {
-      n: '03',
-      title: 'Crescimento Escalável',
-      desc: 'Estratégias de crescimento orgânico e pago que se retroalimentam. Construímos ativos que geram retorno crescente ao longo do tempo.',
-      tags: ['SEO', 'Conteúdo', 'Paid Media', 'Growth Loops'],
-    },
-  ];
+  const tagStyle = {
+    display: 'inline-block',
+    fontFamily: s.sans,
+    fontSize: '11px',
+    fontWeight: 600,
+    color: 'rgba(255,255,255,0.4)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    padding: '4px 12px',
+    marginRight: '6px',
+    marginBottom: '6px',
+  };
 
   return (
-    <section id="pilares" style={{ background: s.dark, padding: '100px 40px' }}>
+    <section id="pilares" style={{ background: '#0d1117', padding: '100px 40px' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        <Badge>Os três pilares</Badge>
         <SectionTitle light>Como estruturamos<br />sua operação de receita</SectionTitle>
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gridTemplateColumns: '1.4fr 1fr',
+          gridTemplateRows: 'auto auto',
           gap: '1px',
           background: 'rgba(255,255,255,0.08)',
           marginTop: '60px',
         }}>
-          {items.map((it, i) => (
-            <div key={i} style={{
-              background: s.dark,
-              padding: '48px 40px',
-            }}>
-              <div style={{
-                fontFamily: s.serif,
-                fontSize: '13px',
-                fontWeight: 600,
-                color: 'rgba(255,255,255,0.25)',
-                marginBottom: '24px',
-                letterSpacing: '0.1em',
-              }}>
-                {it.n}
-              </div>
+          {/* Card 1: featured, spans both rows */}
+          <div style={{
+            gridRow: '1 / 3',
+            background: '#0d1117',
+            padding: '56px 48px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            minHeight: '380px',
+          }}>
+            <div>
               <h3 style={{
                 fontFamily: s.serif,
-                fontSize: '22px',
+                fontSize: '28px',
                 fontWeight: 700,
                 color: '#fff',
-                marginBottom: '16px',
+                marginBottom: '20px',
+                lineHeight: 1.2,
               }}>
-                {it.title}
+                Dados & Rastreamento
               </h3>
               <p style={{
                 fontFamily: s.sans,
                 fontSize: '15px',
                 color: 'rgba(255,255,255,0.55)',
                 lineHeight: 1.7,
-                marginBottom: '28px',
+                marginBottom: '40px',
+                maxWidth: '360px',
               }}>
-                {it.desc}
+                Toda decisão baseada em dados reais. Implementamos tracking, atribuição e analytics que mostram o que realmente gera receita.
               </p>
-              <div>
-                {it.tags.map(t => (
-                  <span key={t} style={{
-                    display: 'inline-block',
-                    fontFamily: s.sans,
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    color: 'rgba(255,255,255,0.4)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    padding: '4px 12px',
-                    marginRight: '6px',
-                    marginBottom: '6px',
-                  }}>
-                    {t}
-                  </span>
-                ))}
-              </div>
             </div>
-          ))}
+            <div>
+              {['GA4', 'GTM', 'Pixel', 'CRM', 'Attribution'].map(t => (
+                <span key={t} style={tagStyle}>{t}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Card 2: top right */}
+          <div style={{ background: '#0d1117', padding: '40px 36px' }}>
+            <h3 style={{
+              fontFamily: s.serif,
+              fontSize: '22px',
+              fontWeight: 700,
+              color: '#fff',
+              marginBottom: '14px',
+            }}>
+              Operações de Funil
+            </h3>
+            <p style={{
+              fontFamily: s.sans,
+              fontSize: '14px',
+              color: 'rgba(255,255,255,0.55)',
+              lineHeight: 1.7,
+              marginBottom: '24px',
+            }}>
+              Mapeamos e otimizamos cada etapa do funil, do primeiro clique à retenção. Eliminamos gargalos e aumentamos a velocidade de receita.
+            </p>
+            <div>
+              {['CRO', 'Funil', 'Automação', 'Lead Score'].map(t => (
+                <span key={t} style={tagStyle}>{t}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Card 3: bottom right */}
+          <div style={{ background: '#0d1117', padding: '40px 36px' }}>
+            <h3 style={{
+              fontFamily: s.serif,
+              fontSize: '22px',
+              fontWeight: 700,
+              color: '#fff',
+              marginBottom: '14px',
+            }}>
+              Crescimento Escalável
+            </h3>
+            <p style={{
+              fontFamily: s.sans,
+              fontSize: '14px',
+              color: 'rgba(255,255,255,0.55)',
+              lineHeight: 1.7,
+              marginBottom: '24px',
+            }}>
+              Estratégias de crescimento orgânico e pago que se retroalimentam. Construímos ativos que geram retorno crescente ao longo do tempo.
+            </p>
+            <div>
+              {['SEO', 'Conteúdo', 'Paid Media', 'Growth Loops'].map(t => (
+                <span key={t} style={tagStyle}>{t}</span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -379,6 +392,7 @@ function Pilares() {
 }
 
 /* ─── SERVIÇOS ──────────────────────────────────────────── */
+/* ONE strategic light section — pricing benefits from lighter bg for legibility */
 function Servicos() {
   const planos = [
     {
@@ -523,26 +537,28 @@ function Servicos() {
                     display: 'flex',
                     gap: '10px',
                   }}>
-                    <span style={{ color: s.blue, flexShrink: 0 }}>→</span>
+                    <span style={{ color: s.blue, flexShrink: 0 }}>+</span>
                     {item}
                   </li>
                 ))}
               </ul>
 
-              <Link href="#contato" style={{
-                display: 'block',
-                fontFamily: s.sans,
-                fontSize: '14px',
-                fontWeight: 600,
-                color: p.highlight ? '#fff' : s.dark,
-                background: p.highlight ? s.grad : 'transparent',
-                border: p.highlight ? 'none' : `1px solid ${s.dark}`,
-                padding: '14px 24px',
-                textAlign: 'center',
-                transition: 'opacity 0.2s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              <Link
+                href="#contato"
+                style={{
+                  display: 'block',
+                  fontFamily: s.sans,
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: p.highlight ? '#fff' : s.dark,
+                  background: p.highlight ? s.grad : 'transparent',
+                  border: p.highlight ? 'none' : `1px solid ${s.dark}`,
+                  padding: '14px 24px',
+                  textAlign: 'center',
+                  transition: 'opacity 0.2s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
               >
                 {p.cta}
               </Link>
@@ -557,10 +573,10 @@ function Servicos() {
 /* ─── COMO FUNCIONA ─────────────────────────────────────── */
 function ComoFunciona() {
   const steps = [
-    { n: '01', title: 'Diagnóstico', desc: 'Mapeamos seu funil atual, dados disponíveis e principais oportunidades em uma reunião de 60 minutos.' },
-    { n: '02', title: 'Estratégia', desc: 'Montamos o plano de Revenue Ops adaptado ao seu momento, recursos e metas de crescimento.' },
-    { n: '03', title: 'Implementação', desc: 'Executamos as mudanças, configuramos o tracking e lançamos os primeiros experimentos de crescimento.' },
-    { n: '04', title: 'Ciclos de Melhoria', desc: 'Revisões semanais com métricas reais, ajustes rápidos e relatórios executivos mensais.' },
+    { title: 'Diagnóstico', desc: 'Mapeamos seu funil atual, dados disponíveis e principais oportunidades em uma reunião de 60 minutos.' },
+    { title: 'Estratégia', desc: 'Montamos o plano de Revenue Ops adaptado ao seu momento, recursos e metas de crescimento.' },
+    { title: 'Implementação', desc: 'Executamos as mudanças, configuramos o tracking e lançamos os primeiros experimentos de crescimento.' },
+    { title: 'Resultados', desc: 'Revisões semanais com métricas reais, ajustes rápidos e relatórios executivos mensais.' },
   ];
 
   return (
@@ -572,7 +588,6 @@ function ComoFunciona() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '0',
           marginTop: '60px',
         }}>
           {steps.map((st, i) => (
@@ -581,15 +596,11 @@ function ComoFunciona() {
               borderLeft: i > 0 ? '1px solid rgba(255,255,255,0.08)' : 'none',
             }}>
               <div style={{
-                fontFamily: s.serif,
-                fontSize: '13px',
-                color: s.blue,
-                fontWeight: 600,
-                marginBottom: '20px',
-                letterSpacing: '0.1em',
-              }}>
-                {st.n}
-              </div>
+                width: '28px',
+                height: '2px',
+                background: s.grad,
+                marginBottom: '24px',
+              }} />
               <h3 style={{
                 fontFamily: s.serif,
                 fontSize: '20px',
@@ -617,14 +628,16 @@ function ComoFunciona() {
 
 /* ─── FERRAMENTAS ───────────────────────────────────────── */
 function Ferramentas() {
+  const tools = ['HubSpot', 'RD Station', 'Salesforce', 'Google Analytics 4', 'Meta Ads', 'Google Ads', 'ActiveCampaign', 'Hotjar', 'Semrush', 'Looker Studio', 'Zapier', 'Make'];
+
   return (
-    <section style={{ background: s.cream, padding: '80px 40px' }}>
+    <section style={{ background: '#0a0f0f', padding: '72px 40px' }}>
       <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
         <p style={{
           fontFamily: s.sans,
           fontSize: '12px',
           fontWeight: 600,
-          color: 'rgba(6,13,13,0.35)',
+          color: 'rgba(255,255,255,0.25)',
           letterSpacing: '0.14em',
           textTransform: 'uppercase',
           marginBottom: '40px',
@@ -632,14 +645,14 @@ function Ferramentas() {
           Operamos com as ferramentas do seu stack
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
-          {['HubSpot','RD Station','Salesforce','Google Analytics 4','Meta Ads','Google Ads','ActiveCampaign','Hotjar','Semrush','Looker Studio','Zapier','Make'].map(t => (
+          {tools.map(t => (
             <span key={t} style={{
               fontFamily: s.sans,
               fontSize: '13px',
               fontWeight: 500,
-              color: 'rgba(6,13,13,0.45)',
-              background: '#fff',
-              border: `1px solid ${s.gray}`,
+              color: 'rgba(255,255,255,0.4)',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.1)',
               padding: '8px 18px',
             }}>
               {t}
@@ -667,7 +680,7 @@ function CTA() {
         transform: 'translateX(-50%)',
         width: '800px',
         height: '400px',
-        background: 'radial-gradient(ellipse, rgba(16,63,234,0.25) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse, rgba(16,63,234,0.2) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
@@ -678,25 +691,28 @@ function CTA() {
           fontSize: '17px',
           color: 'rgba(255,255,255,0.6)',
           lineHeight: 1.7,
-          marginBottom: '48px',
+          maxWidth: '480px',
+          margin: '0 auto 48px',
         }}>
-          Comece com um diagnóstico gratuito de 60 minutos. Mapeamos seu funil atual e identificamos as principais oportunidades de receita.
+          Comece com um diagnóstico gratuito de 60 minutos. Mapeamos seu funil e identificamos oportunidades de receita.
         </p>
 
-        <a href="mailto:contato@mutua.com.br" style={{
-          display: 'inline-block',
-          fontFamily: s.sans,
-          fontSize: '16px',
-          fontWeight: 600,
-          color: '#fff',
-          background: 'linear-gradient(135deg,#103FEA 0%,#1A6DE5 60%,#0a2fa8 100%)',
-          padding: '18px 48px',
-          transition: 'opacity 0.2s',
-        }}
-        onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-        onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+        <a
+          href="mailto:contato@mutua.com.br"
+          style={{
+            display: 'inline-block',
+            fontFamily: s.sans,
+            fontSize: '16px',
+            fontWeight: 600,
+            color: '#fff',
+            background: s.grad,
+            padding: '18px 48px',
+            transition: 'opacity 0.2s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}
         >
-          Agendar diagnóstico gratuito
+          Diagnóstico gratuito
         </a>
       </div>
     </section>
@@ -705,38 +721,64 @@ function CTA() {
 
 /* ─── FOOTER ────────────────────────────────────────────── */
 function Footer() {
+  const links = [
+    { label: 'Metodologia', href: '#metodologia' },
+    { label: 'Serviços', href: '#servicos' },
+    { label: 'Parceria', href: '#parceria' },
+    { label: 'Contato', href: '#contato' },
+  ];
+
   return (
     <footer style={{
       background: '#020609',
-      padding: '40px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      flexWrap: 'wrap',
-      gap: '16px',
+      padding: '48px 40px',
+      borderTop: '1px solid rgba(255,255,255,0.06)',
     }}>
-      <span style={{
-        fontFamily: s.serif,
-        fontSize: '18px',
-        fontWeight: 700,
-        color: 'rgba(255,255,255,0.5)',
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '16px',
       }}>
-        Mutua
-      </span>
-      <span style={{
-        fontFamily: s.sans,
-        fontSize: '13px',
-        color: 'rgba(255,255,255,0.2)',
-      }}>
-        Revenue Operations & Growth Intelligence
-      </span>
-      <span style={{
-        fontFamily: s.sans,
-        fontSize: '13px',
-        color: 'rgba(255,255,255,0.2)',
-      }}>
-        © {new Date().getFullYear()} Mutua
-      </span>
+        <span style={{
+          fontFamily: s.serif,
+          fontSize: '18px',
+          fontWeight: 700,
+          color: 'rgba(255,255,255,0.5)',
+        }}>
+          Mutua
+        </span>
+
+        <div style={{ display: 'flex', gap: '32px' }}>
+          {links.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              style={{
+                fontFamily: s.sans,
+                fontSize: '13px',
+                color: 'rgba(255,255,255,0.25)',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.25)'}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+
+        <span style={{
+          fontFamily: s.sans,
+          fontSize: '13px',
+          color: 'rgba(255,255,255,0.2)',
+        }}>
+          © {new Date().getFullYear()} Mutua
+        </span>
+      </div>
     </footer>
   );
 }
