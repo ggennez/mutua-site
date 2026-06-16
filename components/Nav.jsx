@@ -63,20 +63,25 @@ export default function Nav() {
             {l.label}
           </Link>
         ))}
-        <Link href="/#contato" style={{
-          fontFamily: 'Inter, sans-serif',
-          fontSize: '14px',
-          fontWeight: 600,
-          color: '#fff',
-          background: 'linear-gradient(135deg,#103FEA 0%,#1A6DE5 60%,#0a2fa8 100%)',
-          padding: '10px 22px',
-          transition: 'opacity 0.2s',
-        }}
-        onMouseEnter={e => e.target.style.opacity = '0.85'}
-        onMouseLeave={e => e.target.style.opacity = '1'}
+        <a
+          href="https://calendar.app.google/MfDV2fPTurR6msid6"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '14px',
+            fontWeight: 600,
+            color: '#fff',
+            background: 'linear-gradient(135deg,#103FEA 0%,#1A6DE5 60%,#0a2fa8 100%)',
+            padding: '10px 22px',
+            transition: 'opacity 0.2s',
+            textDecoration: 'none',
+          }}
+          onMouseEnter={e => e.target.style.opacity = '0.85'}
+          onMouseLeave={e => e.target.style.opacity = '1'}
         >
           Falar com especialista
-        </Link>
+        </a>
       </div>
     </nav>
   );
