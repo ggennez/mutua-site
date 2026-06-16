@@ -45,7 +45,7 @@ export default function Nav() {
         color: '#fff',
         letterSpacing: '-0.5px',
       }}>
-        Mutua
+        Muthua
       </Link>
 
       <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>

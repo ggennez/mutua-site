@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Drive — Mutua',
+  title: 'Drive — Muthua',
 };
 
 const folders = [
@@ -9,12 +9,12 @@ const folders = [
       {
         name: 'studio-viva.html',
         href: '/propostas/studio-viva',
-        desc: 'Proposta — Vivá Pilates × Mutua',
+        desc: 'Proposta — Vivá Pilates × Muthua',
       },
       {
         name: 'vagaja.html',
         href: '/propostas/vagaja',
-        desc: 'Proposta — VagaJá × Mutua',
+        desc: 'Proposta — VagaJá × Muthua',
       },
     ],
   },
@@ -24,17 +24,17 @@ const folders = [
       {
         name: 'apresentacao.html',
         href: '/apresentacao',
-        desc: 'Apresentação institucional — Mutua',
+        desc: 'Apresentação institucional — Muthua',
       },
       {
         name: 'calculadora.html',
         href: '/calculadora',
-        desc: 'Calculadora financeira — Mutua',
+        desc: 'Calculadora financeira — Muthua',
       },
       {
         name: 'funil.html',
         href: '/funil',
-        desc: 'Funil Tracker — Mutua',
+        desc: 'Funil Tracker — Muthua',
       },
     ],
   },
@@ -99,7 +99,7 @@ export default function Drive() {
             marginBottom: '48px',
           }}
         >
-          Acesso rápido a propostas e ferramentas da Mutua. Clique em um arquivo para abrir a página em uma nova aba.
+          Acesso rápido a propostas e ferramentas da Muthua. Clique em um arquivo para abrir a página em uma nova aba.
         </p>
 
         {folders.map((folder) => (

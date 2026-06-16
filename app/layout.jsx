@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Mutua — Revenue Operations & Growth Intelligence',
+  title: 'Muthua — Revenue Operations & Growth Intelligence',
   description: 'Transformamos operações de receita em crescimento previsível.',
 };
 

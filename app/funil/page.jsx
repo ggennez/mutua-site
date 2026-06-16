@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Funil Tracker — Mutua',
+  title: 'Funil Tracker — Muthua',
 };
 
 export default function Funil() {
@@ -12,7 +12,7 @@ export default function Funil() {
         height: '100vh',
         border: 'none',
       }}
-      title="Funil Tracker Mutua"
+      title="Funil Tracker Muthua"
     />
   );
 }

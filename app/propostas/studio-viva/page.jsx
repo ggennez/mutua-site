@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Proposta — Studio Vivá × Mutua',
+  title: 'Proposta — Studio Vivá × Muthua',
 };
 
 export default function PropostaStudioViva() {

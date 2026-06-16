@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Calculadora Financeira — Mutua',
+  title: 'Calculadora Financeira — Muthua',
 };
 
 export default function Calculadora() {
@@ -12,7 +12,7 @@ export default function Calculadora() {
         height: '100vh',
         border: 'none',
       }}
-      title="Calculadora Financeira Mutua"
+      title="Calculadora Financeira Muthua"
     />
   );
 }

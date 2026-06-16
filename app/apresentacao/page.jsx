@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Apresentação — Mutua',
+  title: 'Apresentação — Muthua',
 };
 
 export default function Apresentacao() {
@@ -12,7 +12,7 @@ export default function Apresentacao() {
         height: '100vh',
         border: 'none',
       }}
-      title="Apresentação Mutua"
+      title="Apresentação Muthua"
     />
   );
 }

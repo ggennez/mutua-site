@@ -148,7 +148,7 @@ function LoadingScreen({ onDone }) {
       ))}
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
         <div style={{ letterSpacing: '-3px' }}>
-          {'MUTUA'.split('').map((l, i) => (
+          {'MUTHUA'.split('').map((l, i) => (
             <span key={i} className="ltr" style={{ fontSize: 'clamp(64px,10vw,100px)', animationDelay: `${i * 0.09}s` }}>{l}</span>
           ))}
         </div>
@@ -375,8 +375,12 @@ function Hero() {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      <AuroraBg />
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle 700px at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.018) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
+      {/* Hero image */}
+      <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/hero.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0 }} />
+      {/* Dark overlay — lighter at top, heavier at bottom for legibility */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(3,5,8,0.42) 0%, rgba(3,5,8,0.68) 55%, rgba(3,5,8,0.97) 100%)', zIndex: 1 }} />
+      {/* Mouse glow */}
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle 700px at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.025) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 2 }} />
 
       {/* Wordmark — hero identity */}
       <div style={{
@@ -385,7 +389,7 @@ function Hero() {
         flexDirection: 'column',
         justifyContent: 'center',
         position: 'relative',
-        zIndex: 2,
+        zIndex: 3,
         paddingTop: '80px',
         animation: 'fadeUp 1.1s cubic-bezier(.22,1,.36,1) 0.12s both',
       }}>
@@ -399,12 +403,12 @@ function Hero() {
           lineHeight: 0.9,
           userSelect: 'none',
         }}>
-          MUTUA
+          MUTHUA
         </div>
       </div>
 
       {/* Bottom — headline left + descriptor right */}
-      <div style={{ position: 'relative', zIndex: 2, animation: 'fadeUp 0.9s cubic-bezier(.22,1,.36,1) 0.38s both' }}>
+      <div style={{ position: 'relative', zIndex: 3, animation: 'fadeUp 0.9s cubic-bezier(.22,1,.36,1) 0.38s both' }}>
         <div className="hero-btm" style={{ marginBottom: '48px' }}>
           <div>
             <SL text="Revenue Operations" style={{ marginBottom: '20px' }} />
@@ -545,7 +549,7 @@ function Servicos() {
     {
       num: '02', name: 'Growth Operations', tipo: 'Mensalidade', badge: 'Mais escolhido', icon: <TrendIcon />,
       headline: 'Um time de Revenue Ops dedicado à sua empresa',
-      desc: 'A Mutua age como seu time interno de Revenue Ops — executando experimentos, otimizando funil e entregando relatórios executivos todo mês.',
+      desc: 'A Muthua age como seu time interno de Revenue Ops — executando experimentos, otimizando funil e entregando relatórios executivos todo mês.',
       pills: ['Execução contínua','Experiments mensais','Dashboard em tempo real','Revisões semanais'],
     },
     {
@@ -783,7 +787,7 @@ function Footer() {
   return (
     <footer style={{ background: '#010305', padding: '40px 60px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-        <span style={{ fontFamily: s.serif, fontSize: '18px', fontWeight: 700, color: 'rgba(255,255,255,0.3)' }}>Mutua</span>
+        <span style={{ fontFamily: s.serif, fontSize: '18px', fontWeight: 700, color: 'rgba(255,255,255,0.3)' }}>Muthua</span>
         <div style={{ display: 'flex', gap: '32px' }}>
           {links.map(({ label, href }) => (
             <a key={label} href={href} style={{ fontFamily: s.sans, fontSize: '13px', color: 'rgba(255,255,255,0.22)', transition: 'color 0.2s', textDecoration: 'none' }}
@@ -792,7 +796,7 @@ function Footer() {
             >{label}</a>
           ))}
         </div>
-        <span style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 300, color: 'rgba(255,255,255,0.18)' }}>© {new Date().getFullYear()} Mutua</span>
+        <span style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 300, color: 'rgba(255,255,255,0.18)' }}>© {new Date().getFullYear()} Muthua</span>
       </div>
     </footer>
   );
