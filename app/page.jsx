@@ -84,6 +84,10 @@ const css = `
   .how-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(255,255,255,.07); }
   .how-cell { background:#070b10; padding:48px 32px; }
 
+  /* ── pricing ─────────────────────────────────────────────── */
+  .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(255,255,255,.07); }
+  .pricing-popular { outline:1px solid rgba(26,109,229,0.32); outline-offset:-1px; }
+
   /* ── utils ────────────────────────────────────────────────── */
   .pill { display:inline-block; font-family:Inter,sans-serif; font-size:10px; font-weight:500; color:rgba(255,255,255,.3); border:1px solid rgba(255,255,255,.1); padding:3px 10px; margin:3px 3px 3px 0; border-radius:2px; }
 
@@ -96,6 +100,7 @@ const css = `
     .how-grid     { grid-template-columns:repeat(2,1fr)!important; }
     .bene-grid    { grid-template-columns:1fr!important; gap:28px!important; }
     .svc-hdr      { grid-template-columns:1fr!important; }
+    .pricing-grid { grid-template-columns:1fr!important; }
   }
   @media(max-width:768px) {
     .hero-btm   { grid-template-columns:1fr!important; gap:32px!important; }
@@ -967,6 +972,195 @@ function Ferramentas() {
   );
 }
 
+/* ─── PRICING ────────────────────────────────────────────────────── */
+function Pricing() {
+  const [isYearly, setIsYearly] = useState(false);
+
+  const plans = [
+    {
+      name: 'Diagnóstico',
+      monthly: 3900,
+      yearly: 3120,
+      desc: 'Para empresas que querem mapear e estruturar sua operação de receita do zero.',
+      features: [
+        'Mapeamento completo do funil',
+        'Auditoria de CRM e dados',
+        'Setup de rastreamento de campanhas',
+        'Dashboard executivo mensal',
+        '1 experimento de otimização/mês',
+        'Suporte via Slack',
+      ],
+      cta: 'Começar Diagnóstico',
+      popular: false,
+    },
+    {
+      name: 'Aceleração',
+      monthly: 7900,
+      yearly: 6320,
+      desc: 'Operação completa de Revenue com testes sistemáticos, automações e reporting contínuo.',
+      features: [
+        'Tudo do Diagnóstico',
+        'Operação Revenue Ops completa',
+        'Testes A/B e CRO sistemático',
+        'Automações de marketing e vendas',
+        'Lead scoring comportamental',
+        '3 experimentos por mês',
+        'Relatórios semanais',
+      ],
+      cta: 'Começar Aceleração',
+      popular: true,
+    },
+    {
+      name: 'Parceria Full',
+      monthly: 14900,
+      yearly: 11920,
+      desc: 'Time dedicado, estratégia integrada e operação completa para máximo crescimento.',
+      features: [
+        'Tudo do Aceleração',
+        'Time dedicado de Revenue Ops',
+        'Planejamento estratégico trimestral',
+        'Gestão de tráfego pago incluída',
+        'Experimentos ilimitados por mês',
+        'Integrações e custom builds',
+        'Acesso direto ao time Muthua',
+      ],
+      cta: 'Falar com especialista',
+      popular: false,
+    },
+  ];
+
+  return (
+    <section id="planos" style={{ background: s.dark, padding: '120px 60px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+
+        {/* header row */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '64px', flexWrap: 'wrap', gap: '24px' }}>
+          <div>
+            <SL text="Planos" style={{ marginBottom: '20px' }} />
+            <h2 className="reveal" style={{
+              fontFamily: s.serif,
+              fontSize: 'clamp(28px,3.8vw,54px)',
+              fontWeight: 300,
+              color: '#fff',
+              lineHeight: 1.1,
+              letterSpacing: '-1.5px',
+              margin: 0,
+              maxWidth: '440px',
+            }}>
+              Escolha a intensidade do seu{' '}
+              <strong style={{ fontWeight: 700 }}>crescimento</strong>
+            </h2>
+          </div>
+
+          {/* toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 500, color: !isYearly ? '#fff' : 'rgba(255,255,255,0.35)', transition: 'color 0.25s' }}>Mensal</span>
+            <button
+              onClick={() => setIsYearly(p => !p)}
+              style={{
+                position: 'relative', width: '44px', height: '24px',
+                background: isYearly ? s.blue : 'rgba(255,255,255,0.12)',
+                border: 'none', borderRadius: '999px', cursor: 'pointer',
+                transition: 'background 0.3s', padding: 0, flexShrink: 0,
+              }}
+            >
+              <span style={{
+                position: 'absolute', top: '3px',
+                left: isYearly ? '23px' : '3px',
+                width: '18px', height: '18px',
+                borderRadius: '50%', background: '#fff',
+                display: 'block',
+                transition: 'left 0.25s cubic-bezier(.22,1,.36,1)',
+                pointerEvents: 'none',
+              }} />
+            </button>
+            <span style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 500, color: isYearly ? '#fff' : 'rgba(255,255,255,0.35)', transition: 'color 0.25s' }}>
+              Anual <span style={{ color: '#22c55e', fontWeight: 600 }}>−20%</span>
+            </span>
+          </div>
+        </div>
+
+        {/* cards grid */}
+        <div className="pricing-grid">
+          {plans.map((plan, i) => (
+            <div
+              key={plan.name}
+              className={`reveal d${i + 1}${plan.popular ? ' pricing-popular' : ''}`}
+              style={{
+                background: plan.popular ? 'rgba(26,109,229,0.07)' : s.dark,
+                padding: '44px 36px',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+              }}
+            >
+              {plan.popular && (
+                <div style={{
+                  position: 'absolute', top: 0, right: 0,
+                  fontFamily: s.sans, fontSize: '9px', fontWeight: 700,
+                  letterSpacing: '0.14em', textTransform: 'uppercase',
+                  color: '#fff', background: s.blue, padding: '5px 14px',
+                }}>Popular</div>
+              )}
+
+              {/* plan name */}
+              <div style={{ fontFamily: s.sans, fontSize: '10px', fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', marginBottom: '28px' }}>
+                {plan.name}
+              </div>
+
+              {/* price */}
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px' }}>
+                  <span style={{ fontFamily: s.sans, fontSize: '12px', color: 'rgba(255,255,255,0.38)', paddingTop: '10px', alignSelf: 'flex-start' }}>R$</span>
+                  <motion.span
+                    key={`${plan.name}-${isYearly}`}
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ fontFamily: s.serif, fontSize: 'clamp(38px,4vw,54px)', fontWeight: 700, color: '#fff', lineHeight: 1 }}
+                  >
+                    {(isYearly ? plan.yearly : plan.monthly).toLocaleString('pt-BR')}
+                  </motion.span>
+                  <span style={{ fontFamily: s.sans, fontSize: '13px', color: 'rgba(255,255,255,0.32)', alignSelf: 'flex-end', paddingBottom: '4px' }}>/mês</span>
+                </div>
+                {isYearly && (
+                  <div style={{ fontFamily: s.sans, fontSize: '11px', color: 'rgba(255,255,255,0.26)', marginTop: '4px' }}>cobrado anualmente</div>
+                )}
+              </div>
+
+              {/* desc */}
+              <p style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 300, color: 'rgba(255,255,255,0.42)', lineHeight: 1.65, margin: '0 0 32px' }}>
+                {plan.desc}
+              </p>
+
+              {/* features */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', flex: 1, marginBottom: '36px' }}>
+                {plan.features.map((f, fi) => (
+                  <div key={fi} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <div style={{
+                      width: '16px', height: '16px', borderRadius: '50%',
+                      border: `1px solid rgba(26,109,229,${plan.popular ? 0.65 : 0.38})`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0, marginTop: '2px',
+                    }}>
+                      <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
+                        <path d="M1 3.5l1.7 1.7 3-3" stroke="#1A6DE5" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                    <span style={{ fontFamily: s.sans, fontSize: '13px', color: 'rgba(255,255,255,0.58)' }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+
+              <PillBtn href={CALENDAR} solid={plan.popular}>{plan.cta}</PillBtn>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── CTA ─────────────────────────────────────────────────────── */
 function CTA() {
   return (
@@ -1047,6 +1241,7 @@ export default function Home() {
       <Framework />
       <Parceria />
       <Ferramentas />
+      <Pricing />
       <CTA />
       <Footer />
     </>
