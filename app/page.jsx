@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import Spline from '@splinetool/react-spline/next';
 import Nav from '../components/Nav';
 
 const CALENDAR = 'https://calendar.app.google/MfDV2fPTurR6msid6';
@@ -590,8 +591,10 @@ function Hero() {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Hero image */}
-      <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/hero.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0 }} />
+      {/* Spline 3D background */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <Spline scene="https://prod.spline.design/GDQyht1dh6bt-b7A/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+      </div>
       {/* Dark overlay — lighter at top, heavier at bottom for legibility */}
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(3,5,8,0.42) 0%, rgba(3,5,8,0.68) 55%, rgba(3,5,8,0.97) 100%)', zIndex: 1 }} />
       {/* Mouse glow */}
