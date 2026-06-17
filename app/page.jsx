@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import Nav from '../components/Nav';
 
 const CALENDAR = 'https://calendar.app.google/MfDV2fPTurR6msid6';
@@ -331,6 +332,234 @@ function SL({ text, style }) {
   );
 }
 
+/* ─── TEXT GRADIENT SCROLL ──────────────────────────────────────── */
+function RevealChar({ char, progress, start, end }) {
+  const opacity = useTransform(progress, [start, end], [0.12, 1]);
+  return (
+    <span style={{ position: 'relative', display: 'inline-block' }}>
+      <span style={{ opacity: 0.12, userSelect: 'none' }}>{char}</span>
+      <motion.span style={{ position: 'absolute', top: 0, left: 0, opacity }}>{char}</motion.span>
+    </span>
+  );
+}
+
+function TextGradientReveal({ text, progress }) {
+  const words = text.split(' ');
+  return (
+    <p style={{ margin: 0, display: 'flex', flexWrap: 'wrap', gap: '0 0.3em' }}>
+      {words.map((word, wi) => {
+        const wStart = wi / words.length;
+        const wEnd   = wStart + 1 / words.length;
+        const chars  = word.split('');
+        const step   = (wEnd - wStart) / chars.length;
+        return (
+          <span key={wi} style={{ display: 'inline-flex', marginBottom: '0.2em' }}>
+            {chars.map((ch, ci) => (
+              <RevealChar
+                key={ci}
+                char={ch}
+                progress={progress}
+                start={wStart + ci * step}
+                end={wStart + (ci + 1) * step}
+              />
+            ))}
+          </span>
+        );
+      })}
+    </p>
+  );
+}
+
+function ScrollStatement() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'],
+  });
+  const text = 'Não somos uma agência de marketing. Somos a sua operação de Revenue completa — cada funil mapeado, cada experimento medido, cada real rastreado. Crescimento previsível. Não obra do acaso.';
+  return (
+    <section
+      ref={containerRef}
+      style={{ background: s.dark, position: 'relative', minHeight: '200vh', borderTop: '1px solid rgba(255,255,255,0.06)' }}
+    >
+      <div style={{
+        position: 'sticky',
+        top: 0,
+        height: '100dvh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0 60px',
+      }}>
+        <div style={{ maxWidth: '860px', width: '100%' }}>
+          <SL text="Manifesto" style={{ marginBottom: '32px' }} />
+          <div style={{
+            fontFamily: s.serif,
+            fontSize: 'clamp(28px,3.8vw,54px)',
+            fontWeight: 700,
+            color: '#fff',
+            lineHeight: 1.25,
+            letterSpacing: '-0.5px',
+          }}>
+            <TextGradientReveal text={text} progress={scrollYProgress} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── METRIC STACK (DisplayCards) ───────────────────────────────── */
+function MetricStack() {
+  const cards = [
+    { label: 'Funil com gaps',  metric: '67%', desc: 'das empresas têm vazamentos nunca identificados', tag: 'Problema'  },
+    { label: 'Mais previsível', metric: '3×',  desc: 'de previsibilidade com Revenue Ops estruturado',   tag: 'Resultado' },
+    { label: 'Redução de CAC',  metric: '40%', desc: 'do investimento desperdiçado sem rastreamento',    tag: 'Impacto'   },
+  ];
+  return (
+    <div style={{ position: 'relative', width: '340px', height: '210px' }}>
+      {cards.map((card, i) => {
+        const isTop = i === cards.length - 1;
+        const off   = cards.length - 1 - i;
+        return (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              top:  `${off * 20}px`,
+              left: `${off * 32}px`,
+              width: '280px',
+              height: '162px',
+              background: isTop ? 'rgba(255,255,255,0.07)' : `rgba(255,255,255,${0.02 + i * 0.01})`,
+              border: `1px solid rgba(255,255,255,${isTop ? 0.14 : 0.055})`,
+              borderRadius: '10px',
+              padding: '18px 20px',
+              transform: 'skewY(-4deg)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              zIndex: i,
+              transition: 'transform 0.35s cubic-bezier(.22,1,.36,1)',
+            }}
+            onMouseEnter={isTop ? e => { e.currentTarget.style.transform = 'skewY(-4deg) translateY(-9px)'; } : undefined}
+            onMouseLeave={isTop ? e => { e.currentTarget.style.transform = 'skewY(-4deg)'; } : undefined}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <span style={{ fontFamily: s.sans, fontSize: '9px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)' }}>{card.label}</span>
+              <span style={{ fontFamily: s.sans, fontSize: '9px', fontWeight: 500, color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.14)', padding: '2px 7px', borderRadius: '2px', letterSpacing: '0.08em' }}>{card.tag}</span>
+            </div>
+            <div style={{ fontFamily: s.serif, fontSize: 'clamp(34px,4vw,48px)', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{card.metric}</div>
+            <p style={{ fontFamily: s.sans, fontSize: '11px', fontWeight: 300, color: 'rgba(255,255,255,0.38)', lineHeight: 1.5, margin: 0 }}>{card.desc}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── REVENUE AREA CHART ─────────────────────────────────────────── */
+function RevenueAreaChart() {
+  const ref = useRef(null);
+  const [visible, setVisible]   = useState(false);
+  const [showDots, setShowDots] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          setTimeout(() => setShowDots(true), 2100);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const W = 540, H = 280;
+  const pad = { t: 24, r: 16, b: 44, l: 44 };
+  const iW  = W - pad.l - pad.r;
+  const iH  = H - pad.t - pad.b;
+
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const mrr    = [48, 52, 56, 55, 63, 68, 72, 70, 77, 83, 86, 90];
+  const maxV   = 100;
+
+  function smooth(pts) {
+    let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+    for (let i = 1; i < pts.length; i++) {
+      const cpx = ((pts[i-1].x + pts[i].x) / 2).toFixed(1);
+      d += ` C ${cpx},${pts[i-1].y.toFixed(1)} ${cpx},${pts[i].y.toFixed(1)} ${pts[i].x.toFixed(1)},${pts[i].y.toFixed(1)}`;
+    }
+    return d;
+  }
+
+  const pts    = mrr.map((v, i) => ({ x: pad.l + (i / (mrr.length - 1)) * iW, y: pad.t + (1 - v / maxV) * iH }));
+  const line   = smooth(pts);
+  const baseY  = (pad.t + iH).toFixed(1);
+  const area   = `${line} L ${pts[pts.length-1].x.toFixed(1)},${baseY} L ${pts[0].x.toFixed(1)},${baseY} Z`;
+  const gridYs = [0.25, 0.5, 0.75, 1].map(t => ({ v: Math.round(maxV * (1 - t)), y: pad.t + t * iH }));
+
+  return (
+    <div ref={ref} style={{ width: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+        <div>
+          <div style={{ fontFamily: s.sans, fontSize: '9px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '4px' }}>Crescimento MRR</div>
+          <div style={{ fontFamily: s.serif, fontSize: '22px', fontWeight: 700, color: '#fff', lineHeight: 1, display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+            R$ 84k <span style={{ fontSize: '13px', fontFamily: s.sans, color: '#22c55e', fontWeight: 600 }}>↑ +31%</span>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          {['#ff5f57','#febc2e','#28c840'].map((c, i) => (
+            <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: c, opacity: 0.55 }} />
+          ))}
+        </div>
+      </div>
+
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', overflow: 'visible' }}>
+        <defs>
+          <linearGradient id="rac-g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#1A6DE5" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#1A6DE5" stopOpacity="0"    />
+          </linearGradient>
+        </defs>
+
+        {gridYs.map(({ y, v }) => (
+          <g key={v}>
+            <line x1={pad.l} y1={y} x2={pad.l + iW} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+            <text x={pad.l - 8} y={y + 4} textAnchor="end" fontSize="9" fontFamily="Inter,sans-serif" fill="rgba(255,255,255,0.2)">{v}k</text>
+          </g>
+        ))}
+
+        {months.filter((_, i) => i % 3 === 0).map((m, idx) => {
+          const x = pad.l + ((idx * 3) / (months.length - 1)) * iW;
+          return <text key={m} x={x} y={H - 6} textAnchor="middle" fontSize="9" fontFamily="Inter,sans-serif" fill="rgba(255,255,255,0.2)">{m}</text>;
+        })}
+
+        <path d={area} fill="url(#rac-g)" />
+
+        <path
+          d={line}
+          fill="none"
+          stroke="#1A6DE5"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray="1500"
+          strokeDashoffset={visible ? 0 : 1500}
+          style={{ transition: visible ? 'stroke-dashoffset 2s cubic-bezier(.22,1,.36,1)' : 'none' }}
+        />
+
+        {showDots && pts.map((p, i) => (
+          <circle key={i} cx={p.x} cy={p.y} r="3" fill="#1A6DE5" opacity="0.88" />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 /* ─── HERO ────────────────────────────────────────────────────── */
 function Hero() {
   const ref = useRef(null);
@@ -453,6 +682,9 @@ function Benefits() {
               {' '}e transforma sua operação em crescimento previsível e escalável.
             </h2>
             <PillBtn href={CALENDAR} className="reveal d1">Falar com especialista</PillBtn>
+            <div className="reveal d2" style={{ marginTop: '72px' }}>
+              <MetricStack />
+            </div>
           </div>
         </div>
       </div>
@@ -628,7 +860,7 @@ function Servicos() {
             </div>
           </div>
           <div className="feat-right">
-            <DashboardMockup />
+            <RevenueAreaChart />
           </div>
         </div>
       </div>
@@ -810,6 +1042,7 @@ export default function Home() {
       <Hero />
       <Benefits />
       <ProofCards />
+      <ScrollStatement />
       <Servicos />
       <Framework />
       <Parceria />
