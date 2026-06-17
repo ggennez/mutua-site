@@ -399,7 +399,7 @@ function ScrollStatement() {
           <div style={{
             fontFamily: s.serif,
             fontSize: 'clamp(28px,3.8vw,54px)',
-            fontWeight: 700,
+            fontWeight: 300,
             color: '#fff',
             lineHeight: 1.25,
             letterSpacing: '-0.5px',
