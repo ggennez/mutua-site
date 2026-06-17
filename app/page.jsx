@@ -44,7 +44,7 @@ const css = `
   .sec-label { display:inline-flex; align-items:center; gap:10px; font-family:Inter,sans-serif; font-size:11px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.3); }
 
   /* ── pill button ──────────────────────────────────────────── */
-  .btn-pill { display:inline-flex; align-items:center; gap:14px; font-family:Inter,sans-serif; font-size:14px; font-weight:600; color:#fff; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); border-radius:999px; padding:10px 10px 10px 28px; text-decoration:none; transition:background .25s,border-color .25s; white-space:nowrap; }
+  .btn-pill { display:inline-flex; align-items:center; gap:14px; font-family:Inter,sans-serif; font-size:14px; font-weight:600; color:#fff; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); border-radius:999px; padding:10px 10px 10px 28px; text-decoration:none; transition:background .25s,border-color .25s; white-space:nowrap; align-self:flex-start; }
   .btn-pill:hover { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.3); }
   .pill-circle { width:34px; height:34px; border-radius:50%; background:#1A6DE5; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
   .btn-pill-solid { background:#1A6DE5; border-color:transparent; padding:12px 12px 12px 30px; font-size:15px; }
@@ -114,6 +114,19 @@ const css = `
     .feat-right { padding:40px 24px!important; }
     .acelera-grid { grid-template-columns:repeat(2,1fr)!important; }
   }
+
+  /* ── testimonials ─────────────────────────────────────────────── */
+  .tsm-stack  { display:grid; grid-template-areas:'stack'; place-items:start; }
+  .tsm-card   { grid-area:stack; position:relative; }
+  .tsm-behind { filter:grayscale(1); transition:filter .5s; }
+  .tsm-behind::before { content:''; position:absolute; inset:0; border-radius:16px; background:rgba(3,5,8,.65); transition:opacity .5s; pointer-events:none; z-index:1; }
+  .tsm-behind:hover { filter:grayscale(0); }
+  .tsm-behind:hover::before { opacity:0; }
+  .tsm-bento  { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(255,255,255,.07); }
+  .tsm-feat   { grid-column:span 2; grid-row:span 2; }
+  .tsm-wide   { grid-column:span 2; }
+  @media(max-width:1024px) { .tsm-bento { grid-template-columns:repeat(2,1fr)!important; } .tsm-feat { grid-column:span 1!important; grid-row:span 1!important; } .tsm-wide { grid-column:span 1!important; } }
+  @media(max-width:640px)  { .tsm-bento { grid-template-columns:1fr!important; } }
 `;
 
 /* ─── LOADING SCREEN ──────────────────────────────────────────── */
@@ -631,6 +644,7 @@ function Hero() {
               Crescimento<br />
               <em style={{ fontStyle: 'italic', color: '#fff' }}>previsível.</em>
             </h1>
+            <div style={{ marginTop: '28px' }}><AvatarGroup /></div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
             <p style={{ fontFamily: s.sans, fontSize: '15px', fontWeight: 300, color: 'rgba(255,255,255,0.4)', lineHeight: 1.74, margin: '0 0 28px', maxWidth: '360px' }}>
@@ -972,15 +986,204 @@ function Ferramentas() {
   );
 }
 
+/* ─── AVATAR GROUP ────────────────────────────────────────────── */
+function AvatarGroup() {
+  const imgs = [
+    'https://originui.com/avatar-80-03.jpg',
+    'https://originui.com/avatar-80-04.jpg',
+    'https://originui.com/avatar-80-05.jpg',
+    'https://originui.com/avatar-80-06.jpg',
+  ];
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)', padding: '4px 14px 4px 4px', gap: '10px' }}>
+      <div style={{ display: 'flex' }}>
+        {imgs.map((src, i) => (
+          <img key={i} src={src} width={22} height={22} alt="" style={{ borderRadius: '50%', outline: '2px solid #030508', marginLeft: i === 0 ? 0 : '-6px', display: 'block' }} />
+        ))}
+      </div>
+      <p style={{ margin: 0, fontFamily: s.sans, fontSize: '12px', color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap' }}>
+        Confiado por <strong style={{ color: '#fff', fontWeight: 600 }}>+30</strong> empresas
+      </p>
+    </div>
+  );
+}
+
+/* ─── TWEET CARD ──────────────────────────────────────────────── */
+function TweetCard({ username, handle, content, likes, retweets, isBehind, style, onMouseEnter, onMouseLeave }) {
+  const ini = handle.replace('@', '').slice(0, 2).toUpperCase();
+  return (
+    <div
+      className={isBehind ? 'tsm-card tsm-behind' : 'tsm-card'}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={{
+        width: '300px',
+        minHeight: '178px',
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: '16px',
+        padding: '20px 22px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        ...style,
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(26,109,229,0.32)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontFamily: s.sans, fontSize: '11px', fontWeight: 700, color: '#fff' }}>{ini}</span>
+          </div>
+          <div>
+            <div style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>{username}</div>
+            <div style={{ fontFamily: s.sans, fontSize: '11px', color: 'rgba(255,255,255,0.36)' }}>{handle}</div>
+          </div>
+        </div>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      </div>
+      <p style={{ fontFamily: s.sans, fontSize: '13px', color: 'rgba(255,255,255,0.78)', lineHeight: 1.55, margin: '0 0 14px', flex: 1 }}>{content}</p>
+      <div style={{ display: 'flex', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span style={{ fontFamily: s.sans, fontSize: '11px', color: 'rgba(255,255,255,0.28)' }}>{likes}</span>
+        </div>
+        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+          </svg>
+          <span style={{ fontFamily: s.sans, fontSize: '11px', color: 'rgba(255,255,255,0.28)' }}>{retweets}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StackedTestimonials() {
+  const [hovered, setHovered] = useState(null);
+  const cards = [
+    { username: 'Felipe Torres', handle: '@felipetorres', content: 'A previsibilidade de receita que a Muthua trouxe mudou nossa forma de planejar. Fazemos forecast com 90% de acurácia agora.', likes: 112, retweets: 28 },
+    { username: 'Ana Luiza Braga', handle: '@analuiza_cmo', content: 'O mapeamento de funil revelou onde perdíamos 60% dos leads. Em 60 dias, triplicamos as oportunidades qualificadas.', likes: 89, retweets: 19 },
+    { username: 'Bruno Alves', handle: '@brunoalves_', content: 'CAC caiu 40% e MRR cresceu 31% nos primeiros 90 dias. Revenue Ops de verdade — não consultoria genérica.', likes: 203, retweets: 45 },
+  ];
+
+  const base = [
+    { x: 0, y: 0 },
+    { x: 24, y: 8 },
+    { x: 48, y: 16 },
+  ];
+
+  function getT(idx) {
+    let { x, y } = base[idx];
+    if (hovered === 0) { if (idx === 1) y += 80; if (idx === 2) y += 110; }
+    if (hovered === 1 && idx === 2) y += 80;
+    return `skewY(-8deg) translateX(${x}px) translateY(${y}px)`;
+  }
+
+  return (
+    <div className="tsm-stack" style={{ paddingRight: '64px', paddingBottom: '64px' }}>
+      {cards.map((card, i) => (
+        <TweetCard
+          key={i}
+          {...card}
+          isBehind={i < cards.length - 1}
+          style={{ transform: getT(i), zIndex: i, transition: 'transform 0.5s cubic-bezier(.22,1,.36,1)' }}
+          onMouseEnter={() => setHovered(i)}
+          onMouseLeave={() => setHovered(null)}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ─── TESTIMONIALS GRID ───────────────────────────────────────── */
+function TestimonialsGrid() {
+  const items = [
+    {
+      quote: 'A Muthua não é uma agência. É a nossa operação de revenue inteira. Em 3 meses, mapeamos o funil, reduzimos o CAC em 38% e aumentamos a previsibilidade de receita de um jeito que nunca imaginamos ser possível.',
+      name: 'Ricardo Mendes', role: 'Co-fundador', company: 'Fintech — SP',
+      cls: 'tsm-feat', big: true,
+    },
+    {
+      quote: 'Experimentos sistemáticos, dashboards claros e rastreamento de cada real investido. Finalmente entendemos onde estávamos errando.',
+      name: 'Carla Duarte', role: 'Growth Lead', company: '',
+      cls: 'tsm-wide', big: false,
+    },
+    {
+      quote: 'Relatórios semanais que realmente fazem sentido. Zero achismo, 100% dados.',
+      name: 'Ana Luiza', role: 'CMO', company: '',
+      cls: '', big: false,
+    },
+    {
+      quote: 'Em 6 meses, MRR cresceu 2,4×. A Muthua sabe exatamente o que faz.',
+      name: 'Lucas Ferreira', role: 'CEO', company: '',
+      cls: '', big: false,
+    },
+  ];
+
+  const Av = ({ name }) => {
+    const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2);
+    const hue = (name.charCodeAt(0) * 47) % 360;
+    return (
+      <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: `hsl(${hue},38%,24%)`, border: '1px solid rgba(255,255,255,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <span style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.65)' }}>{initials}</span>
+      </div>
+    );
+  };
+
+  return (
+    <div className="tsm-bento">
+      {items.map((t, i) => (
+        <div key={i} className={`reveal ${t.cls}`} style={{ background: s.dark, padding: t.big ? '52px 48px' : '40px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '28px' }}>
+          <blockquote style={{ fontFamily: t.big ? s.serif : s.sans, fontSize: t.big ? 'clamp(16px,1.8vw,20px)' : '14px', fontWeight: t.big ? 400 : 300, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, margin: 0, flex: 1 }}>
+            "{t.quote}"
+          </blockquote>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <Av name={t.name} />
+            <div>
+              <div style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 600, color: '#fff' }}>{t.name}</div>
+              <div style={{ fontFamily: s.sans, fontSize: '12px', color: 'rgba(255,255,255,0.32)' }}>
+                {t.role}{t.company ? ` · ${t.company}` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── DEPOIMENTOS ─────────────────────────────────────────────── */
+function Depoimentos() {
+  return (
+    <section id="depoimentos" style={{ background: s.dark, borderTop: '1px solid rgba(255,255,255,0.06)', padding: '120px 60px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center', marginBottom: '80px' }}>
+          <div>
+            <div style={{ marginBottom: '28px' }}><AvatarGroup /></div>
+            <SL text="Depoimentos" style={{ marginBottom: '20px' }} />
+            <h2 className="reveal" style={{ fontFamily: s.serif, fontSize: 'clamp(28px,3.8vw,54px)', fontWeight: 300, color: '#fff', lineHeight: 1.1, letterSpacing: '-1.5px', margin: 0 }}>
+              O que nossos clientes <strong style={{ fontWeight: 700 }}>dizem</strong>
+            </h2>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <StackedTestimonials />
+          </div>
+        </div>
+        <TestimonialsGrid />
+      </div>
+    </section>
+  );
+}
+
 /* ─── PRICING ────────────────────────────────────────────────────── */
 function Pricing() {
-  const [isYearly, setIsYearly] = useState(false);
-
   const plans = [
     {
       name: 'Diagnóstico',
-      monthly: 3900,
-      yearly: 3120,
       desc: 'Para empresas que querem mapear e estruturar sua operação de receita do zero.',
       features: [
         'Mapeamento completo do funil',
@@ -995,8 +1198,6 @@ function Pricing() {
     },
     {
       name: 'Aceleração',
-      monthly: 7900,
-      yearly: 6320,
       desc: 'Operação completa de Revenue com testes sistemáticos, automações e reporting contínuo.',
       features: [
         'Tudo do Diagnóstico',
@@ -1012,8 +1213,6 @@ function Pricing() {
     },
     {
       name: 'Parceria Full',
-      monthly: 14900,
-      yearly: 11920,
       desc: 'Time dedicado, estratégia integrada e operação completa para máximo crescimento.',
       features: [
         'Tudo do Aceleração',
@@ -1033,51 +1232,22 @@ function Pricing() {
     <section id="planos" style={{ background: s.dark, padding: '120px 60px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
-        {/* header row */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '64px', flexWrap: 'wrap', gap: '24px' }}>
-          <div>
-            <SL text="Planos" style={{ marginBottom: '20px' }} />
-            <h2 className="reveal" style={{
-              fontFamily: s.serif,
-              fontSize: 'clamp(28px,3.8vw,54px)',
-              fontWeight: 300,
-              color: '#fff',
-              lineHeight: 1.1,
-              letterSpacing: '-1.5px',
-              margin: 0,
-              maxWidth: '440px',
-            }}>
-              Escolha a intensidade do seu{' '}
-              <strong style={{ fontWeight: 700 }}>crescimento</strong>
-            </h2>
-          </div>
-
-          {/* toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 500, color: !isYearly ? '#fff' : 'rgba(255,255,255,0.35)', transition: 'color 0.25s' }}>Mensal</span>
-            <button
-              onClick={() => setIsYearly(p => !p)}
-              style={{
-                position: 'relative', width: '44px', height: '24px',
-                background: isYearly ? s.blue : 'rgba(255,255,255,0.12)',
-                border: 'none', borderRadius: '999px', cursor: 'pointer',
-                transition: 'background 0.3s', padding: 0, flexShrink: 0,
-              }}
-            >
-              <span style={{
-                position: 'absolute', top: '3px',
-                left: isYearly ? '23px' : '3px',
-                width: '18px', height: '18px',
-                borderRadius: '50%', background: '#fff',
-                display: 'block',
-                transition: 'left 0.25s cubic-bezier(.22,1,.36,1)',
-                pointerEvents: 'none',
-              }} />
-            </button>
-            <span style={{ fontFamily: s.sans, fontSize: '13px', fontWeight: 500, color: isYearly ? '#fff' : 'rgba(255,255,255,0.35)', transition: 'color 0.25s' }}>
-              Anual <span style={{ color: '#22c55e', fontWeight: 600 }}>−20%</span>
-            </span>
-          </div>
+        {/* header */}
+        <div style={{ marginBottom: '64px' }}>
+          <SL text="Planos" style={{ marginBottom: '20px' }} />
+          <h2 className="reveal" style={{
+            fontFamily: s.serif,
+            fontSize: 'clamp(28px,3.8vw,54px)',
+            fontWeight: 300,
+            color: '#fff',
+            lineHeight: 1.1,
+            letterSpacing: '-1.5px',
+            margin: 0,
+            maxWidth: '440px',
+          }}>
+            Escolha a intensidade do seu{' '}
+            <strong style={{ fontWeight: 700 }}>crescimento</strong>
+          </h2>
         </div>
 
         {/* cards grid */}
@@ -1106,26 +1276,6 @@ function Pricing() {
               {/* plan name */}
               <div style={{ fontFamily: s.sans, fontSize: '10px', fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', marginBottom: '28px' }}>
                 {plan.name}
-              </div>
-
-              {/* price */}
-              <div style={{ marginBottom: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px' }}>
-                  <span style={{ fontFamily: s.sans, fontSize: '12px', color: 'rgba(255,255,255,0.38)', paddingTop: '10px', alignSelf: 'flex-start' }}>R$</span>
-                  <motion.span
-                    key={`${plan.name}-${isYearly}`}
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                    style={{ fontFamily: s.serif, fontSize: 'clamp(38px,4vw,54px)', fontWeight: 700, color: '#fff', lineHeight: 1 }}
-                  >
-                    {(isYearly ? plan.yearly : plan.monthly).toLocaleString('pt-BR')}
-                  </motion.span>
-                  <span style={{ fontFamily: s.sans, fontSize: '13px', color: 'rgba(255,255,255,0.32)', alignSelf: 'flex-end', paddingBottom: '4px' }}>/mês</span>
-                </div>
-                {isYearly && (
-                  <div style={{ fontFamily: s.sans, fontSize: '11px', color: 'rgba(255,255,255,0.26)', marginTop: '4px' }}>cobrado anualmente</div>
-                )}
               </div>
 
               {/* desc */}
@@ -1241,6 +1391,7 @@ export default function Home() {
       <Framework />
       <Parceria />
       <Ferramentas />
+      <Depoimentos />
       <Pricing />
       <CTA />
       <Footer />
