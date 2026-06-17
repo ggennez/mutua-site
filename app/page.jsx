@@ -595,35 +595,11 @@ function Hero() {
       <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
         <Spline scene="https://prod.spline.design/GDQyht1dh6bt-b7A/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
-      {/* Dark overlay — lighter at top, heavier at bottom for legibility */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(3,5,8,0.42) 0%, rgba(3,5,8,0.68) 55%, rgba(3,5,8,0.97) 100%)', zIndex: 1 }} />
       {/* Mouse glow */}
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle 700px at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.025) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 2 }} />
 
-      {/* Wordmark — hero identity */}
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        position: 'relative',
-        zIndex: 3,
-        paddingTop: '80px',
-        animation: 'fadeUp 1.1s cubic-bezier(.22,1,.36,1) 0.12s both',
-      }}>
-        <div style={{
-          fontFamily: s.serif,
-          fontSize: 'clamp(96px,16vw,220px)',
-          fontWeight: 700,
-          letterSpacing: '0.08em',
-          WebkitTextStroke: '1.5px rgba(255,255,255,0.18)',
-          color: 'transparent',
-          lineHeight: 0.9,
-          userSelect: 'none',
-        }}>
-          MUTHUA
-        </div>
-      </div>
+      {/* Spacer — pushes bottom content down */}
+      <div style={{ flex: 1 }} />
 
       {/* Bottom — headline left + descriptor right */}
       <div style={{ position: 'relative', zIndex: 3, animation: 'fadeUp 0.9s cubic-bezier(.22,1,.36,1) 0.38s both' }}>
