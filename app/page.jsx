@@ -640,7 +640,7 @@ function Hero() {
         <div className="hero-btm" style={{ marginBottom: '48px' }}>
           <div>
             <SL text="Revenue Operations" style={{ marginBottom: '20px' }} />
-            <h1 style={{ fontFamily: s.serif, fontSize: 'clamp(40px,5.5vw,80px)', fontWeight: 700, color: '#fff', lineHeight: 0.94, letterSpacing: '-2px', margin: 0 }}>
+            <h1 style={{ fontFamily: s.serif, fontSize: 'clamp(40px,5.5vw,80px)', fontWeight: 300, color: '#fff', lineHeight: 0.94, letterSpacing: '-2px', margin: 0 }}>
               Crescimento<br />
               <em style={{ fontStyle: 'italic', color: '#fff' }}>previsível.</em>
             </h1>
@@ -697,7 +697,7 @@ function Benefits() {
               margin: '0 0 40px',
             }}>
               Revenue Ops que{' '}
-              <strong style={{ fontWeight: 700 }}>elimina o desperdício</strong>
+              <em style={{ fontStyle: 'italic' }}>elimina o desperdício</em>
               {' '}e transforma sua operação em crescimento previsível e escalável.
             </h2>
             <PillBtn href={CALENDAR} className="reveal d1">Falar com especialista</PillBtn>
@@ -817,7 +817,7 @@ function Servicos() {
               margin: 0,
             }}>
               Três formas de{' '}
-              <strong style={{ fontWeight: 700 }}>construir revenue.</strong>
+              <em style={{ fontStyle: 'italic' }}>construir revenue.</em>
             </h2>
           </div>
           <div className="reveal d1">
@@ -906,7 +906,7 @@ function Framework() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'flex-end' }}>
           <h2 className="reveal" style={{ fontFamily: s.serif, fontSize: 'clamp(28px,3.8vw,52px)', fontWeight: 300, color: '#fff', lineHeight: 1.1, letterSpacing: '-1.5px', margin: 0 }}>
             Sete camadas.{' '}
-            <strong style={{ fontWeight: 700 }}>Um resultado.</strong>
+            <em style={{ fontStyle: 'italic' }}>Um resultado.</em>
           </h2>
           <p style={{ fontFamily: s.sans, fontSize: '14px', fontWeight: 300, color: 'rgba(255,255,255,0.32)', lineHeight: 1.72, margin: 0, maxWidth: '320px', justifySelf: 'end' }}>
             O framework A.C.E.L.E.R.A cobre todo o ciclo de receita, da aquisição à análise contínua.
@@ -944,7 +944,7 @@ function Parceria() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'flex-end' }}>
           <h2 className="reveal" style={{ fontFamily: s.serif, fontSize: 'clamp(28px,3.8vw,52px)', fontWeight: 300, color: '#fff', lineHeight: 1.1, letterSpacing: '-1.5px', margin: 0 }}>
             Do diagnóstico ao{' '}
-            <strong style={{ fontWeight: 700 }}>crescimento contínuo.</strong>
+            <em style={{ fontStyle: 'italic' }}>crescimento contínuo.</em>
           </h2>
           <div className="reveal d1" style={{ justifySelf: 'end' }}>
             <PillBtn href={CALENDAR}>Começar agora</PillBtn>
@@ -981,6 +981,140 @@ function Ferramentas() {
             <span key={i} style={{ fontFamily: s.sans, fontSize: '13px', color: 'rgba(255,255,255,0.22)', padding: '0 40px', whiteSpace: 'nowrap', borderRight: '1px solid rgba(255,255,255,0.07)' }}>{t}</span>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── SOCIAL PROOF ─────────────────────────────────────────────── */
+function InlineAvatar({ src, name, quote, expanded, onEnter, onLeave }) {
+  return (
+    <span
+      style={{ display: 'inline-block', verticalAlign: 'middle', position: 'relative', margin: '0 8px' }}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+    >
+      <span style={{
+        display: 'block',
+        width: expanded ? '130px' : '44px',
+        height: '44px',
+        borderRadius: '999px',
+        overflow: 'hidden',
+        border: '2px solid rgba(255,255,255,0.18)',
+        transition: 'width 0.35s cubic-bezier(.22,1,.36,1)',
+      }}>
+        <img src={src} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+      </span>
+      {expanded && (
+        <span style={{
+          position: 'absolute',
+          top: 'calc(100% + 10px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#fff',
+          borderRadius: '12px',
+          padding: '16px 18px',
+          width: '220px',
+          zIndex: 100,
+          boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+          display: 'block',
+          pointerEvents: 'none',
+        }}>
+          <p style={{ fontFamily: s.sans, fontSize: '13px', lineHeight: 1.5, margin: '0 0 8px', color: '#030508' }}>"{quote}"</p>
+          <p style={{ fontFamily: s.sans, fontSize: '12px', fontWeight: 600, margin: 0, color: '#030508' }}>{name}</p>
+        </span>
+      )}
+    </span>
+  );
+}
+
+function StatCell({ stat }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      style={{ background: s.dark, position: 'relative', overflow: 'hidden', minHeight: '108px', cursor: 'default' }}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+    >
+      {/* Resting: company label */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '5px',
+        transform: hov ? 'translateY(-110%)' : 'translateY(0)',
+        opacity: hov ? 0 : 1,
+        transition: 'transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.22s',
+      }}>
+        <span style={{ fontFamily: s.sans, fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.24)' }}>{stat.company}</span>
+        <span style={{ fontFamily: s.sans, fontSize: '10px', color: 'rgba(255,255,255,0.14)', textAlign: 'center', padding: '0 14px' }}>{stat.label}</span>
+      </div>
+      {/* Hover: stat number */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px',
+        transform: hov ? 'translateY(0)' : 'translateY(110%)',
+        opacity: hov ? 1 : 0,
+        transition: 'transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.22s',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={stat.up ? '#22c55e' : 'rgba(255,255,255,0.45)'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            {stat.up
+              ? <><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></>
+              : <><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></>
+            }
+          </svg>
+          <span style={{ fontFamily: s.serif, fontSize: 'clamp(22px,2.5vw,32px)', fontWeight: 300, fontStyle: 'italic', color: '#fff' }}>{stat.val}</span>
+        </div>
+        <p style={{ fontFamily: s.sans, fontSize: '11px', color: 'rgba(255,255,255,0.36)', textAlign: 'center', margin: 0, padding: '0 12px' }}>{stat.label}</p>
+      </div>
+    </div>
+  );
+}
+
+function SocialProof() {
+  const [hovImg, setHovImg] = useState(null);
+
+  const people = [
+    { src: 'https://originui.com/avatar-80-04.jpg', name: 'Carla Mendes', quote: 'Em 60 dias, o volume de oportunidades qualificadas triplicou. A Muthua entende de Revenue de verdade.' },
+    { src: 'https://originui.com/avatar-80-06.jpg', name: 'Ricardo Faria', quote: 'Previsibilidade de receita foi o que mais mudou. Hoje fazemos forecast com 90% de acurácia.' },
+  ];
+
+  const stats = [
+    { val: '40%', label: 'redução no CAC', up: false, company: 'E-commerce' },
+    { val: '47%', label: 'mais oportunidades', up: true, company: 'SaaS B2B' },
+    { val: '31%', label: 'crescimento de MRR', up: true, company: 'Fintech' },
+    { val: '2,4×', label: 'de receita em 6 meses', up: true, company: 'Marketplace' },
+  ];
+
+  return (
+    <section style={{ background: s.mid, padding: '100px 60px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '44px' }}>
+          <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.36)', padding: '4px 18px', borderRadius: '999px', fontFamily: s.sans, fontSize: '10px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+            Resultados reais
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'center', marginBottom: '52px' }}>
+          <div style={{ fontFamily: s.serif, fontSize: 'clamp(22px,3vw,42px)', fontWeight: 300, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1.3 }}>
+            Tornamos simples para
+            <InlineAvatar {...people[0]} expanded={hovImg === 0} onEnter={() => setHovImg(0)} onLeave={() => setHovImg(null)} />
+            empresas B2B
+          </div>
+          <div style={{ fontFamily: s.serif, fontSize: 'clamp(22px,3vw,42px)', fontWeight: 300, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1.3 }}>
+            e suas equipes
+            <InlineAvatar {...people[1]} expanded={hovImg === 1} onEnter={() => setHovImg(1)} onLeave={() => setHovImg(null)} />
+            crescerem com
+          </div>
+          <div style={{ fontFamily: s.serif, fontSize: 'clamp(22px,3vw,42px)', fontWeight: 300, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1.3 }}>
+            receita <em style={{ fontStyle: 'italic' }}>previsível</em>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(255,255,255,0.07)', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
+          {stats.map((stat, i) => <StatCell key={i} stat={stat} />)}
+        </div>
+
       </div>
     </section>
   );
@@ -1166,7 +1300,7 @@ function Depoimentos() {
             <div style={{ marginBottom: '28px' }}><AvatarGroup /></div>
             <SL text="Depoimentos" style={{ marginBottom: '20px' }} />
             <h2 className="reveal" style={{ fontFamily: s.serif, fontSize: 'clamp(28px,3.8vw,54px)', fontWeight: 300, color: '#fff', lineHeight: 1.1, letterSpacing: '-1.5px', margin: 0 }}>
-              O que nossos clientes <strong style={{ fontWeight: 700 }}>dizem</strong>
+              O que nossos clientes <em style={{ fontStyle: 'italic' }}>dizem</em>
             </h2>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -1246,7 +1380,7 @@ function Pricing() {
             maxWidth: '440px',
           }}>
             Escolha a intensidade do seu{' '}
-            <strong style={{ fontWeight: 700 }}>crescimento</strong>
+            <em style={{ fontStyle: 'italic' }}>crescimento</em>
           </h2>
         </div>
 
@@ -1318,7 +1452,7 @@ function CTA() {
       <GridLines />
       <div style={{ maxWidth: '960px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <SL text="Pronto para crescer" style={{ marginBottom: '28px' }} />
-        <h2 className="reveal" style={{ fontFamily: s.serif, fontSize: 'clamp(36px,6vw,92px)', fontWeight: 700, color: '#fff', lineHeight: 0.92, letterSpacing: '-2.5px', marginBottom: '48px' }}>
+        <h2 className="reveal" style={{ fontFamily: s.serif, fontSize: 'clamp(36px,6vw,92px)', fontWeight: 300, color: '#fff', lineHeight: 0.92, letterSpacing: '-2.5px', marginBottom: '48px' }}>
           Seu próximo{' '}
           <em style={{ fontStyle: 'italic', color: '#fff' }}>patamar</em>
           <br />começa agora.
@@ -1385,6 +1519,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <Benefits />
+      <SocialProof />
       <ProofCards />
       <ScrollStatement />
       <Servicos />
