@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import Spline from '@splinetool/react-spline/next';
+import Spline from '@splinetool/react-spline';
 import Nav from '../components/Nav';
 
 const CALENDAR = 'https://calendar.app.google/MfDV2fPTurR6msid6';
