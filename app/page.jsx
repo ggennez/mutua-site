@@ -21,21 +21,11 @@ const css = `
     50%    {transform:perspective(1100px) rotateY(-7deg) rotateX(2deg) translateY(-14px)}
   }
   @keyframes blobPop    { from{transform:scale(0.1);opacity:0} to{transform:scale(1);opacity:var(--bop,.38)} }
-  @keyframes ab1m       { 0%,100%{transform:translate(0,0)} 50%{transform:translate(7%,9%)} }
-  @keyframes ab2m       { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-9%,5%)} }
-  @keyframes ab3m       { 0%,100%{transform:translate(0,0)} 50%{transform:translate(5%,-8%)} }
-  @keyframes ab4m       { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-6%,7%)} }
   @keyframes ltrIn      { to{opacity:1;transform:translateY(0)} }
   @keyframes lineExp    { to{width:clamp(110px,18vw,200px)} }
   @keyframes lFdIn      { to{opacity:1} }
   @keyframes drawStroke { to{stroke-dashoffset:0} }
 
-  /* ── aurora ───────────────────────────────────────────────── */
-  .ab { position:absolute; border-radius:50%; filter:blur(120px); pointer-events:none; }
-  .ab1 { width:clamp(280px,46vw,580px); height:clamp(280px,46vw,580px); background:#103FEA; --bop:.38; top:-8%; left:-5%; animation:ab1m 15s ease-in-out infinite; }
-  .ab2 { width:clamp(240px,38vw,500px); height:clamp(240px,38vw,500px); background:#7B2FF7; --bop:.3;  top:22%; right:-8%; animation:ab2m 19s ease-in-out infinite; }
-  .ab3 { width:clamp(200px,32vw,440px); height:clamp(200px,32vw,440px); background:#06B6D4; --bop:.25; bottom:4%; left:18%; animation:ab3m 13s ease-in-out infinite; }
-  .ab4 { width:clamp(160px,22vw,300px); height:clamp(160px,22vw,300px); background:#EC4899; --bop:.18; top:52%; right:22%; animation:ab4m 22s ease-in-out infinite; }
 
   /* ── loader ───────────────────────────────────────────────── */
   .loader { position:fixed; inset:0; z-index:9999; background:#030508; display:flex; align-items:center; justify-content:center; overflow:hidden; transition:transform .85s cubic-bezier(.76,0,.24,1); }
@@ -159,15 +149,6 @@ function LoadingScreen({ onDone }) {
   );
 }
 
-/* ─── AURORA BG ───────────────────────────────────────────────── */
-function AuroraBg() {
-  return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
-      <div className="ab ab1" /><div className="ab ab2" />
-      <div className="ab ab3" /><div className="ab ab4" />
-    </div>
-  );
-}
 
 /* ─── DASHBOARD MOCKUP ────────────────────────────────────────── */
 function DashboardMockup() {
@@ -758,7 +739,6 @@ function Ferramentas() {
 function CTA() {
   return (
     <section id="contato" style={{ background: s.dark, padding: '140px 60px', position: 'relative', overflow: 'hidden', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-      <AuroraBg />
       <GridLines />
       <div style={{ maxWidth: '960px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <SL text="Pronto para crescer" style={{ marginBottom: '28px' }} />
