@@ -21,7 +21,6 @@ const css = `
     0%,100%{transform:perspective(1100px) rotateY(-7deg) rotateX(2deg) translateY(0)}
     50%    {transform:perspective(1100px) rotateY(-7deg) rotateX(2deg) translateY(-14px)}
   }
-  @keyframes blobPop    { from{transform:scale(0.1);opacity:0} to{transform:scale(1);opacity:var(--bop,.38)} }
   @keyframes ltrIn      { to{opacity:1;transform:translateY(0)} }
   @keyframes lineExp    { to{width:clamp(110px,18vw,200px)} }
   @keyframes lFdIn      { to{opacity:1} }
@@ -139,22 +138,8 @@ function LoadingScreen({ onDone }) {
     return () => { clearTimeout(t1); clearTimeout(t2); document.body.style.overflow = ''; };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const blobs = [
-    { c: '#103FEA', w: 500, style: { top: '-15%', left: '-8%' },   delay: 0   },
-    { c: '#7B2FF7', w: 420, style: { top: '20%',  right: '-8%' },  delay: 0.2 },
-    { c: '#06B6D4', w: 360, style: { bottom: '-5%', left: '15%' }, delay: 0.4 },
-  ];
-
   return (
     <div className={`loader${exiting ? ' exit' : ''}`}>
-      {blobs.map((b, i) => (
-        <div key={i} style={{
-          position: 'absolute', width: b.w, height: b.w, borderRadius: '50%',
-          background: b.c, filter: 'blur(110px)',
-          animation: `blobPop 1.3s cubic-bezier(.22,1,.36,1) ${b.delay}s both`,
-          ...b.style,
-        }} />
-      ))}
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
         <div style={{ letterSpacing: '-3px' }}>
           {'MUTHUA'.split('').map((l, i) => (
