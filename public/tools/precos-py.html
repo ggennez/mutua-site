@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radar Paraguai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --surface-0: #f4f3ee;
+  --surface-1: #fcfcfb;
+  --border: #e3e1d9;
+  --grid: #ebe9e2;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #7a7973;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --good: #0f7b3f;
+  --critical: #c62f2f;
+  --accent: #1A6DE5;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-0: #111110;
+    --surface-1: #1a1a19;
+    --border: #2e2e2c;
+    --grid: #262624;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #8f8e86;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --good: #4cc27d;
+    --critical: #ef6b6b;
+    --accent: #5b9bf0;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #111110; --surface-1: #1a1a19; --border: #2e2e2c; --grid: #262624;
+  --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+  --series-1: #3987e5; --series-2: #d95926; --good: #4cc27d; --critical: #ef6b6b; --accent: #5b9bf0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+body { font-family: Inter, system-ui, sans-serif; background: var(--surface-0); color: var(--text-primary); line-height: 1.5; font-size: 15px; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+h1 { font-family: Fraunces, serif; font-weight: 600; font-size: 28px; }
+h2 { font-family: Fraunces, serif; font-weight: 600; font-size: 18px; margin-bottom: 4px; }
+.sub { color: var(--text-secondary); font-size: 13px; }
+.muted { color: var(--text-muted); font-size: 12px; }
+select, input { font: inherit; color: var(--text-primary); background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
+select { min-width: 220px; }
+button { font: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); border-radius: 8px; padding: 7px 12px; }
+button.primary { background: var(--accent); color: #fff; border-color: transparent; }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.grid { display: grid; gap: 14px; }
+.kpis { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin-bottom: 14px; }
+.kpi .label { color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.kpi .value { font-size: 22px; white-space: nowrap; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.kpi .note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.up { color: var(--critical); } .down { color: var(--good); }
+.charts { grid-template-columns: 1fr; margin-bottom: 14px; }
+@media (min-width: 860px) { .charts.two { grid-template-columns: 1fr 1fr; } }
+.chart { position: relative; margin-top: 10px; }
+.chart svg { display: block; width: 100%; height: 240px; overflow: visible; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+.legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); white-space: nowrap; display: none; z-index: 2; }
+.tip b { font-variant-numeric: tabular-nums; }
+.tip .sw { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.banner { background: var(--surface-1); border: 1px dashed var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.demo-tag { display: inline-block; font-size: 11px; font-weight: 600; background: var(--series-2); color: #fff; padding: 2px 8px; border-radius: 99px; margin-left: 8px; vertical-align: middle; }
+.calc { grid-template-columns: 1fr; }
+@media (min-width: 860px) { .calc { grid-template-columns: 1.1fr .9fr; } }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 12px; }
+.fields label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-secondary); }
+.fields input { width: 100%; }
+.fields fieldset { grid-column: 1 / -1; border: 0; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; margin-top: 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+td, th { padding: 6px 4px; border-bottom: 1px solid var(--grid); text-align: right; }
+td:first-child, th:first-child { text-align: left; }
+th { color: var(--text-secondary); font-weight: 500; }
+tr.total td { font-weight: 600; border-bottom: 0; border-top: 2px solid var(--border); }
+.verdict { margin-top: 14px; padding: 12px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; }
+details summary { cursor: pointer; color: var(--text-secondary); font-size: 13px; }
+.scroll { max-height: 320px; overflow: auto; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Radar Paraguai <span id="demoTag" class="demo-tag" hidden>DADOS FICTÍCIOS</span></h1>
+      <p class="sub">Histórico de preços do Compras Paraguai × dólar, com custo real da viagem.</p>
+    </div>
+    <div>
+      <select id="termo" aria-label="Produto monitorado"></select>
+      <p class="muted" id="atualizado"></p>
+    </div>
+  </header>
+
+  <div class="banner" id="semDados" hidden>
+    <span>Ainda não há coletas. O coletor roda 3x ao dia (08h, 14h, 20h) e grava em <code>historico.json</code>.</span>
+    <button class="primary" id="btnDemo">Ver com dados de demonstração</button>
+  </div>
+
+  <section class="grid kpis" id="kpis"></section>
+
+  <section class="grid charts">
+    <div class="card">
+      <h2>Preço no Paraguai (US$)</h2>
+      <p class="sub">Menor preço e mediana das ofertas encontradas em cada coleta.</p>
+      <div class="chart" id="chUsd"></div>
+    </div>
+  </section>
+  <section class="grid charts two">
+    <div class="card">
+      <h2>Dólar comercial (R$)</h2>
+      <p class="sub">Cotação no momento de cada coleta.</p>
+      <div class="chart" id="chDolar"></div>
+    </div>
+    <div class="card">
+      <h2>Menor preço convertido (R$)</h2>
+      <p class="sub" id="decomp">US$ × dólar — o que você paga de fato.</p>
+      <div class="chart" id="chBrl"></div>
+    </div>
+  </section>
+
+  <section class="grid calc">
+    <div class="card">
+      <h2>Custo total da ida</h2>
+      <p class="sub">Os valores ficam salvos neste navegador.</p>
+      <div class="fields" id="fields">
+        <fieldset>Compra</fieldset>
+        <label>Preço do produto (US$)<input type="number" step="0.01" id="f_precoUsd"></label>
+        <label>Quantidade<input type="number" min="1" step="1" id="f_qtd" value="1"></label>
+        <label>Dólar (R$)<input type="number" step="0.0001" id="f_dolar"></label>
+        <label>Spread + IOF do pagamento (%)<input type="number" step="0.1" id="f_spread" value="6"></label>
+        <label>Preço no Brasil (R$, un.)<input type="number" step="0.01" id="f_precoBr"></label>
+        <fieldset>Deslocamento</fieldset>
+        <label>Distância só ida (km)<input type="number" id="f_km" value="650"></label>
+        <label>Rendimento do carro (km/l)<input type="number" step="0.1" id="f_kml" value="11"></label>
+        <label>Combustível (R$/l)<input type="number" step="0.01" id="f_litro" value="6.2"></label>
+        <label>Pedágios ida+volta (R$)<input type="number" step="0.01" id="f_pedagio" value="120"></label>
+        <label>Estacionamento/ponte (R$)<input type="number" step="0.01" id="f_estac" value="40"></label>
+        <label>Alimentação/hospedagem (R$)<input type="number" step="0.01" id="f_alim" value="150"></label>
+        <label>Pessoas dividindo<input type="number" min="1" step="1" id="f_pessoas" value="1"></label>
+        <fieldset>Tempo e impostos</fieldset>
+        <label>Horas totais da viagem<input type="number" step="0.5" id="f_horas" value="18"></label>
+        <label>Quanto vale sua hora (R$)<input type="number" step="1" id="f_hora" value="0"></label>
+        <label>Cota de isenção (US$)<input type="number" step="1" id="f_cota" value="500"></label>
+        <label>Imposto sobre excedente (%)<input type="number" step="1" id="f_imposto" value="50"></label>
+      </div>
+      <p class="muted" style="margin-top:10px">Cota, alíquota e IOF são padrões editáveis — confira as regras vigentes na Receita Federal e no seu banco antes de viajar.</p>
+    </div>
+    <div class="card">
+      <h2>Resultado</h2>
+      <table id="resultado"></table>
+      <div class="verdict" id="veredito"></div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:14px">
+    <details>
+      <summary>Ver dados em tabela</summary>
+      <div class="scroll"><table id="tabela"></table></div>
+    </details>
+  </section>
+</div>
+
+<script>
+const DATA_URL = '/data/precos-py/historico.json';
+const LS_KEY = 'radar-py-calc';
+const $ = (id) => document.getElementById(id);
+const fmtUsd = (v) => 'US$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtBrl = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const fmtPct = (v) => (v = Math.round(v * 10) / 10 || 0, (v > 0 ? '+' : '') + v.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%');
+const fmtData = (d) => d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+let historico = null;
+let precoUsdAtual = null, dolarAtual = null;
+
+// ---------- demonstração (claramente marcada como fictícia) ----------
+function gerarDemo() {
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const termos = [['iphone 15 128gb', 640], ['playstation 5 slim', 430], ['jbl flip 6', 95]];
+  const dolar = [], precos = [];
+  const inicio = Date.now() - 30 * 864e5;
+  let d = 5.45;
+  const base = Object.fromEntries(termos);
+  for (let i = 0; i < 90; i++) {
+    const data = new Date(inicio + i * 864e5 / 3).toISOString();
+    d = +(d + (rnd() - 0.48) * 0.03).toFixed(4);
+    dolar.push({ data, valor: d, fonte: 'demo' });
+    for (const [termo] of termos) {
+      base[termo] *= 1 + (rnd() - 0.53) * 0.012;
+      const min = +base[termo].toFixed(2);
+      precos.push({ data, termo, min, mediana: +(min * (1.06 + rnd() * 0.04)).toFixed(2), max: +(min * 1.3).toFixed(2), ofertas: 8 + Math.floor(rnd() * 20), metodo: 'demo', dolar: d });
+    }
+  }
+  return { atualizadoEm: new Date().toISOString(), dolar, precos, demo: true };
+}
+
+// ---------- estatística ----------
+function regressao(pontos) { // pontos: [{x: ms, y}] -> inclinação por dia
+  const n = pontos.length;
+  if (n < 3) return null;
+  const xs = pontos.map((p) => p.x / 864e5), ys = pontos.map((p) => p.y);
+  const mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n;
+  let num = 0, den = 0;
+  for (let i = 0; i < n; i++) { num += (xs[i] - mx) * (ys[i] - my); den += (xs[i] - mx) ** 2; }
+  return den ? { slope: num / den, media: my } : null;
+}
+
+function tendencia(pontos, dias = 14) {
+  const corte = Date.now() - dias * 864e5;
+  const janela = pontos.filter((p) => p.x >= corte);
+  const r = regressao(janela.length >= 3 ? janela : pontos);
+  if (!r) return null;
+  const pctSemana = (r.slope * 7 / r.media) * 100;
+  const rotulo = pctSemana > 1 ? 'Alta' : pctSemana < -1 ? 'Baixa' : 'Estável';
+  return { pctSemana, rotulo };
+}
+
+function valorEm(pontos, alvo) { // ponto mais próximo no passado
+  let best = null;
+  for (const p of pontos) if (p.x <= alvo) best = p;
+  return best;
+}
+
+// ---------- gráfico de linhas em SVG (eixo único, crosshair + tooltip) ----------
+function lineChart(el, series, fmt) {
+  el.innerHTML = '';
+  const all = series.flatMap((s) => s.points);
+  if (!all.length) { el.innerHTML = '<p class="muted">Sem dados.</p>'; return; }
+  const W = Math.max(el.clientWidth, 280), H = 240, m = { l: 64, r: 12, t: 10, b: 26 };
+  const xs = all.map((p) => p.x), ys = all.map((p) => p.y);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs) || x0 + 1;
+  let y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const pad = (y1 - y0) * 0.1 || y1 * 0.05 || 1; y0 -= pad; y1 += pad;
+  const sx = (x) => m.l + ((x - x0) / (x1 - x0 || 1)) * (W - m.l - m.r);
+  const sy = (y) => m.t + (1 - (y - y0) / (y1 - y0)) * (H - m.t - m.b);
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('role', 'img');
+  let g = '';
+  for (let i = 0; i <= 4; i++) {
+    const v = y0 + ((y1 - y0) * i) / 4, y = sy(v);
+    g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y}" y2="${y}" stroke="${css('--grid')}" stroke-width="1"/>`;
+    g += `<text x="${m.l - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="${css('--text-muted')}">${fmt(v)}</text>`;
+  }
+  const ticks = Math.min(5, Math.max(2, Math.floor(W / 140)));
+  for (let i = 0; i <= ticks; i++) {
+    const v = x0 + ((x1 - x0) * i) / ticks;
+    const d = new Date(v);
+    g += `<text x="${sx(v)}" y="${H - 6}" text-anchor="${i === 0 ? 'start' : i === ticks ? 'end' : 'middle'}" font-size="11" fill="${css('--text-muted')}">${d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</text>`;
+  }
+  for (const s of series) {
+    const d = s.points.map((p, i) => `${i ? 'L' : 'M'}${sx(p.x).toFixed(1)},${sy(p.y).toFixed(1)}`).join('');
+    g += `<path d="${d}" fill="none" stroke="${css(s.color)}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  }
+  g += `<line id="cross" y1="${m.t}" y2="${H - m.b}" stroke="${css('--text-muted')}" stroke-width="1" stroke-dasharray="3 3" visibility="hidden"/>`;
+  for (const s of series) g += `<circle class="dot" r="4.5" fill="${css(s.color)}" stroke="${css('--surface-1')}" stroke-width="2" visibility="hidden"/>`;
+  svg.innerHTML = g;
+  el.appendChild(svg);
+
+  if (series.length > 1) {
+    const lg = document.createElement('div'); lg.className = 'legend';
+    lg.innerHTML = series.map((s) => `<span><i style="background:var(${s.color})"></i>${s.name}</span>`).join('');
+    el.appendChild(lg);
+  }
+  const tip = document.createElement('div'); tip.className = 'tip'; el.appendChild(tip);
+  const cross = svg.querySelector('#cross'), dots = svg.querySelectorAll('.dot');
+  const ref = series[0].points;
+  svg.addEventListener('pointermove', (ev) => {
+    const r = svg.getBoundingClientRect();
+    const px = ((ev.clientX - r.left) / r.width) * W;
+    let idx = 0, best = Infinity;
+    ref.forEach((p, i) => { const dd = Math.abs(sx(p.x) - px); if (dd < best) { best = dd; idx = i; } });
+    const x = ref[idx].x, X = sx(x);
+    cross.setAttribute('x1', X); cross.setAttribute('x2', X); cross.setAttribute('visibility', 'visible');
+    let rows = `<div class="muted">${fmtData(new Date(x))}</div>`;
+    series.forEach((s, i) => {
+      const p = s.points.find((q) => q.x === x);
+      if (!p) { dots[i].setAttribute('visibility', 'hidden'); return; }
+      dots[i].setAttribute('cx', X); dots[i].setAttribute('cy', sy(p.y)); dots[i].setAttribute('visibility', 'visible');
+      rows += `<div><span class="sw" style="background:var(${s.color})"></span>${s.name}: <b>${fmt(p.y)}</b></div>`;
+    });
+    tip.innerHTML = rows; tip.style.display = 'block';
+    const left = (X / W) * r.width;
+    tip.style.left = Math.min(Math.max(left + 12, 0), r.width - tip.offsetWidth) + 'px';
+    tip.style.top = '8px';
+  });
+  svg.addEventListener('pointerleave', () => {
+    tip.style.display = 'none'; cross.setAttribute('visibility', 'hidden');
+    dots.forEach((d) => d.setAttribute('visibility', 'hidden'));
+  });
+}
+
+// ---------- render ----------
+function render() {
+  const termo = $('termo').value;
+  const regs = historico.precos.filter((p) => p.termo === termo).map((p) => ({ ...p, x: Date.parse(p.data) }));
+  const dol = historico.dolar.map((d) => ({ x: Date.parse(d.data), y: d.valor }));
+  const minPts = regs.map((p) => ({ x: p.x, y: p.min }));
+  const medPts = regs.map((p) => ({ x: p.x, y: p.mediana }));
+  const brlPts = regs.filter((p) => p.dolar).map((p) => ({ x: p.x, y: p.min * p.dolar }));
+
+  lineChart($('chUsd'), [
+    { name: 'Menor preço', color: '--series-1', points: minPts },
+    { name: 'Mediana das ofertas', color: '--series-2', points: medPts },
+  ], (v) => 'US$ ' + Math.round(v).toLocaleString('pt-BR'));
+  lineChart($('chDolar'), [{ name: 'Dólar', color: '--series-1', points: dol }], (v) => 'R$ ' + v.toFixed(2).replace('.', ','));
+  lineChart($('chBrl'), [{ name: 'Menor preço em R$', color: '--series-1', points: brlPts }], (v) => 'R$ ' + Math.round(v).toLocaleString('pt-BR'));
+
+  const ult = regs[regs.length - 1];
+  const ultDolar = dol[dol.length - 1];
+  precoUsdAtual = ult?.min ?? null;
+  dolarAtual = ultDolar?.y ?? null;
+
+  const kpis = [];
+  if (ult) {
+    const ant7 = valorEm(minPts, ult.x - 7 * 864e5);
+    const var7 = ant7 ? ((ult.min - ant7.y) / ant7.y) * 100 : null;
+    const tUsd = tendencia(minPts);
+    const tBrl = tendencia(brlPts);
+    kpis.push(['Menor preço agora', fmtUsd(ult.min), `${ult.ofertas} ofertas · mediana ${fmtUsd(ult.mediana)}`]);
+    kpis.push(['Em reais (sem taxas)', ult.dolar ? fmtBrl(ult.min * ult.dolar) : '—', ult.dolar ? `dólar a R$ ${ult.dolar.toFixed(4).replace('.', ',')}` : 'sem cotação']);
+    kpis.push(['Variação 7 dias (US$)', var7 == null ? '—' : fmtPct(var7), 'menor preço vs. 7 dias atrás', var7]);
+    kpis.push(['Tendência US$ (14d)', tUsd ? `${tUsd.rotulo === 'Alta' ? '▲' : tUsd.rotulo === 'Baixa' ? '▼' : '■'} ${tUsd.rotulo}` : '—', tUsd ? `${fmtPct(tUsd.pctSemana)} por semana (regressão linear)` : 'precisa de 3+ coletas', tUsd?.pctSemana]);
+    kpis.push(['Tendência em R$ (14d)', tBrl ? `${tBrl.rotulo === 'Alta' ? '▲' : tBrl.rotulo === 'Baixa' ? '▼' : '■'} ${tBrl.rotulo}` : '—', tBrl ? `${fmtPct(tBrl.pctSemana)} por semana, já com o dólar` : '', tBrl?.pctSemana]);
+  }
+  $('kpis').innerHTML = kpis.map(([l, v, n, s]) =>
+    `<div class="card kpi"><div class="label">${l}</div><div class="value ${s > 1 ? 'up' : s < -1 ? 'down' : ''}">${v}</div><div class="note">${n}</div></div>`).join('');
+
+  // Decomposição: quanto da variação em R$ veio do preço em US$ e quanto do câmbio
+  const comDolar = regs.filter((p) => p.dolar);
+  if (comDolar.length >= 2) {
+    const a = comDolar[0], b = comDolar[comDolar.length - 1];
+    const efPreco = (b.min - a.min) * a.dolar, efCambio = b.min * (b.dolar - a.dolar);
+    $('decomp').textContent = `Desde ${new Date(a.x).toLocaleDateString('pt-BR')}: ${fmtBrl(efPreco + efCambio)} no total — ${fmtBrl(efPreco)} pelo preço em US$ e ${fmtBrl(efCambio)} pelo dólar.`;
+  } else {
+    $('decomp').textContent = 'US$ × dólar — o que você paga de fato.';
+  }
+
+  $('tabela').innerHTML = '<tr><th>Coleta</th><th>Mín. US$</th><th>Mediana US$</th><th>Ofertas</th><th>Dólar</th><th>Mín. R$</th></tr>' +
+    regs.slice().reverse().map((p) => `<tr><td>${fmtData(new Date(p.x))}</td><td>${p.min.toFixed(2)}</td><td>${p.mediana.toFixed(2)}</td><td>${p.ofertas}</td><td>${p.dolar ? p.dolar.toFixed(4) : '—'}</td><td>${p.dolar ? (p.min * p.dolar).toFixed(2) : '—'}</td></tr>`).join('');
+
+  $('f_precoUsd').value = precoUsdAtual ?? $('f_precoUsd').value;
+  if (dolarAtual) $('f_dolar').value = dolarAtual;
+  calcular();
+}
+
+// ---------- calculadora ----------
+const CAMPOS_SALVOS = ['spread', 'precoBr', 'km', 'kml', 'litro', 'pedagio', 'estac', 'alim', 'pessoas', 'horas', 'hora', 'cota', 'imposto', 'qtd'];
+const num = (id) => parseFloat($('f_' + id).value) || 0;
+
+function calcular() {
+  const qtd = Math.max(1, num('qtd')), pessoas = Math.max(1, num('pessoas'));
+  const usd = num('precoUsd') * qtd, dolar = num('dolar');
+  const compra = usd * dolar;
+  const spread = compra * num('spread') / 100;
+  const imposto = Math.max(0, usd - num('cota')) * dolar * num('imposto') / 100;
+  const litros = num('kml') ? (num('km') * 2) / num('kml') : 0;
+  const combustivel = litros * num('litro');
+  const fixos = num('pedagio') + num('estac') + num('alim');
+  const tempo = num('horas') * num('hora');
+  const viagem = (combustivel + fixos + tempo) / pessoas;
+  const total = compra + spread + imposto + viagem;
+  const br = num('precoBr') * qtd;
+
+  const linhas = [
+    ['Produto' + (qtd > 1 ? ` (×${qtd})` : ''), compra],
+    ['Spread + IOF', spread],
+    ['Imposto (acima da cota)', imposto],
+    [`Combustível (${litros.toFixed(0)} l)` + (pessoas > 1 ? ` ÷ ${pessoas}` : ''), combustivel / pessoas],
+    ['Pedágio, estacionamento, comida' + (pessoas > 1 ? ` ÷ ${pessoas}` : ''), fixos / pessoas],
+    ['Seu tempo' + (pessoas > 1 ? ` ÷ ${pessoas}` : ''), tempo / pessoas],
+  ];
+  $('resultado').innerHTML = linhas.map(([l, v]) => `<tr><td>${l}</td><td>${fmtBrl(v)}</td></tr>`).join('') +
+    `<tr class="total"><td>Custo real no Paraguai</td><td>${fmtBrl(total)}</td></tr>`;
+
+  const v = $('veredito');
+  if (!dolar || !num('precoUsd')) { v.textContent = 'Preencha preço e dólar para calcular.'; return; }
+  if (!br) { v.innerHTML = `Informe o preço no Brasil para comparar. Custo da viagem por pessoa: <b>${fmtBrl(viagem)}</b>.`; return; }
+  const eco = br - total;
+  const custoFixoPorUn = viagem; // viagem é paga uma vez
+  const economiaUn = num('precoBr') - (num('precoUsd') * dolar * (1 + num('spread') / 100));
+  const breakEven = economiaUn > 0 ? Math.ceil(custoFixoPorUn / economiaUn) : null;
+  v.innerHTML = eco > 0
+    ? `<b class="down">Vale a pena:</b> economia de <b>${fmtBrl(eco)}</b> (${fmtPct(eco / br * 100)}) frente ao Brasil (${fmtBrl(br)}).`
+    : `<b class="up">Não compensa:</b> sai <b>${fmtBrl(-eco)}</b> mais caro que comprar no Brasil (${fmtBrl(br)}).`;
+  if (breakEven && breakEven > qtd) v.innerHTML += `<br><span class="muted">A viagem se paga a partir de ${breakEven} unidades (sem considerar a cota).</span>`;
+}
+
+function salvar() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(Object.fromEntries(CAMPOS_SALVOS.map((k) => [k, $('f_' + k).value])))); } catch {}
+}
+function restaurar() {
+  try {
+    const s = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+    for (const k of CAMPOS_SALVOS) if (s[k] != null && s[k] !== '') $('f_' + k).value = s[k];
+  } catch {}
+}
+
+// ---------- boot ----------
+function carregar(dados) {
+  historico = dados;
+  const termos = [...new Set(dados.precos.map((p) => p.termo))];
+  $('termo').innerHTML = termos.map((t) => `<option>${t}</option>`).join('');
+  $('semDados').hidden = termos.length > 0;
+  $('demoTag').hidden = !dados.demo;
+  $('atualizado').textContent = dados.atualizadoEm ? 'Última coleta: ' + fmtData(new Date(dados.atualizadoEm)) : '';
+  render();
+}
+
+$('termo').addEventListener('change', render);
+$('fields').addEventListener('input', () => { calcular(); salvar(); });
+$('btnDemo').addEventListener('click', () => carregar(gerarDemo()));
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => historico && render(), 150); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => historico && render());
+
+restaurar();
+const params = new URLSearchParams(location.search);
+(params.has('demo') ? Promise.resolve(gerarDemo()) : fetch(DATA_URL, { cache: 'no-store' }).then((r) => r.json()))
+  .catch(() => ({ atualizadoEm: null, dolar: [], precos: [] }))
+  .then(carregar);
+</script>
+</body>
+</html>
