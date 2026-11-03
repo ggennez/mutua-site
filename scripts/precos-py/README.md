@@ -25,8 +25,11 @@ Painel: /precos-py  (public/tools/precos-py.html)
 - Menor preço e mediana em US$ por coleta; dólar e preço convertido em R$ em gráficos separados.
 - Tendência = regressão linear dos últimos 14 dias, em % por semana (±1% = estável).
 - A variação em R$ é separada em "efeito preço em US$" e "efeito câmbio".
-- Calculadora: combustível (km ida×2 ÷ km/l × R$/l), pedágio, estacionamento, comida, valor da sua hora,
-  spread+IOF, imposto sobre o que passar da cota e rateio entre pessoas; compara com o preço no Brasil.
+- Carrinho: adicione produtos (preço em US$, quantidade e, opcionalmente, preço no Brasil). A viagem entra
+  automaticamente como um item, calculada por `custoViagem()` — combustível (km ida×2 ÷ km/l × R$/l), pedágio,
+  estacionamento, comida, valor da sua hora, rateio entre pessoas. Spread+IOF e imposto sobre o que passar da
+  cota são aplicados ao total do carrinho. Padrões: Corolla 2003, 14 km/l, gasolina R$ 6,00,
+  Londrina → Ciudad del Este ≈ 540 km só ida (estimativa — confira no mapa); pedágio começa em 0, preencha.
 
 ## Limitações conhecidas
 

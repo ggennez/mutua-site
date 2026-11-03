@@ -134,34 +134,39 @@ details summary { cursor: pointer; color: var(--text-secondary); font-size: 13px
 
   <section class="grid calc">
     <div class="card">
-      <h2>Custo total da ida</h2>
-      <p class="sub">Os valores ficam salvos neste navegador.</p>
+      <h2>Viagem e taxas</h2>
+      <p class="sub">O custo da viagem entra sozinho no carrinho. Os valores ficam salvos neste navegador.</p>
       <div class="fields" id="fields">
-        <fieldset>Compra</fieldset>
-        <label>Preço do produto (US$)<input type="number" step="0.01" id="f_precoUsd"></label>
-        <label>Quantidade<input type="number" min="1" step="1" id="f_qtd" value="1"></label>
-        <label>Dólar (R$)<input type="number" step="0.0001" id="f_dolar"></label>
-        <label>Spread + IOF do pagamento (%)<input type="number" step="0.1" id="f_spread" value="6"></label>
-        <label>Preço no Brasil (R$, un.)<input type="number" step="0.01" id="f_precoBr"></label>
-        <fieldset>Deslocamento</fieldset>
-        <label>Distância só ida (km)<input type="number" id="f_km" value="650"></label>
-        <label>Rendimento do carro (km/l)<input type="number" step="0.1" id="f_kml" value="11"></label>
-        <label>Combustível (R$/l)<input type="number" step="0.01" id="f_litro" value="6.2"></label>
-        <label>Pedágios ida+volta (R$)<input type="number" step="0.01" id="f_pedagio" value="120"></label>
+        <fieldset>Carro — Londrina → Ciudad del Este</fieldset>
+        <label>Veículo<input type="text" id="f_carro" value="Corolla 2003"></label>
+        <label>Rendimento (km/l)<input type="number" step="0.1" id="f_kml" value="14"></label>
+        <label>Gasolina (R$/l)<input type="number" step="0.01" id="f_litro" value="6.00"></label>
+        <label>Distância só ida (km)<input type="number" id="f_km" value="540" title="Londrina → Ciudad del Este (estimativa; confira no mapa)"></label>
+        <fieldset>Outros custos da viagem</fieldset>
+        <label>Pedágios ida+volta (R$) — confira<input type="number" step="0.01" id="f_pedagio" value="0" placeholder="valor da sua rota"></label>
         <label>Estacionamento/ponte (R$)<input type="number" step="0.01" id="f_estac" value="40"></label>
         <label>Alimentação/hospedagem (R$)<input type="number" step="0.01" id="f_alim" value="150"></label>
-        <label>Pessoas dividindo<input type="number" min="1" step="1" id="f_pessoas" value="1"></label>
-        <fieldset>Tempo e impostos</fieldset>
         <label>Horas totais da viagem<input type="number" step="0.5" id="f_horas" value="18"></label>
         <label>Quanto vale sua hora (R$)<input type="number" step="1" id="f_hora" value="0"></label>
+        <label>Pessoas dividindo<input type="number" min="1" step="1" id="f_pessoas" value="1"></label>
+        <fieldset>Câmbio e impostos</fieldset>
+        <label>Dólar (R$)<input type="number" step="0.0001" id="f_dolar"></label>
+        <label>Spread + IOF do pagamento (%)<input type="number" step="0.1" id="f_spread" value="6"></label>
         <label>Cota de isenção (US$)<input type="number" step="1" id="f_cota" value="500"></label>
         <label>Imposto sobre excedente (%)<input type="number" step="1" id="f_imposto" value="50"></label>
       </div>
       <p class="muted" style="margin-top:10px">Cota, alíquota e IOF são padrões editáveis — confira as regras vigentes na Receita Federal e no seu banco antes de viajar.</p>
     </div>
     <div class="card">
-      <h2>Resultado</h2>
-      <table id="resultado"></table>
+      <h2>Carrinho</h2>
+      <form class="fields" id="addForm">
+        <label style="grid-column:1/-1">Produto<input type="text" id="a_nome" required></label>
+        <label>Preço (US$, un.)<input type="number" step="0.01" min="0" id="a_usd" required></label>
+        <label>Qtd.<input type="number" min="1" step="1" id="a_qtd" value="1" required></label>
+        <label>Preço no Brasil (R$, un.)<input type="number" step="0.01" min="0" id="a_br" placeholder="opcional"></label>
+        <label style="justify-content:end"><button class="primary" type="submit">Adicionar ao carrinho</button></label>
+      </form>
+      <table id="carrinho" style="margin-top:14px"></table>
       <div class="verdict" id="veredito"></div>
     </div>
   </section>
@@ -176,7 +181,7 @@ details summary { cursor: pointer; color: var(--text-secondary); font-size: 13px
 
 <script>
 const DATA_URL = '/data/precos-py/historico.json';
-const LS_KEY = 'radar-py-calc';
+const LS_KEY = 'radar-py-calc-v2';
 const $ = (id) => document.getElementById(id);
 const fmtUsd = (v) => 'US$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtBrl = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -355,62 +360,105 @@ function render() {
   $('tabela').innerHTML = '<tr><th>Coleta</th><th>Mín. US$</th><th>Mediana US$</th><th>Ofertas</th><th>Dólar</th><th>Mín. R$</th></tr>' +
     regs.slice().reverse().map((p) => `<tr><td>${fmtData(new Date(p.x))}</td><td>${p.min.toFixed(2)}</td><td>${p.mediana.toFixed(2)}</td><td>${p.ofertas}</td><td>${p.dolar ? p.dolar.toFixed(4) : '—'}</td><td>${p.dolar ? (p.min * p.dolar).toFixed(2) : '—'}</td></tr>`).join('');
 
-  $('f_precoUsd').value = precoUsdAtual ?? $('f_precoUsd').value;
+  $('a_nome').value = termo;
+  if (precoUsdAtual) $('a_usd').value = precoUsdAtual;
   if (dolarAtual) $('f_dolar').value = dolarAtual;
   calcular();
 }
 
-// ---------- calculadora ----------
-const CAMPOS_SALVOS = ['spread', 'precoBr', 'km', 'kml', 'litro', 'pedagio', 'estac', 'alim', 'pessoas', 'horas', 'hora', 'cota', 'imposto', 'qtd'];
+// ---------- custo da viagem ----------
+// Função pura: dá o custo de ida+volta de carro. Exposta em window.custoViagem.
+function custoViagem({ kmIda, kml, precoLitro, pedagio = 0, estacionamento = 0, alimentacao = 0, horas = 0, valorHora = 0, pessoas = 1 }) {
+  const litros = kml > 0 ? (kmIda * 2) / kml : 0;
+  const combustivel = litros * precoLitro;
+  const outros = pedagio + estacionamento + alimentacao;
+  const tempo = horas * valorHora;
+  const total = combustivel + outros + tempo;
+  return { litros, combustivel, outros, tempo, total, porPessoa: total / Math.max(1, pessoas) };
+}
+window.custoViagem = custoViagem;
+
+// ---------- carrinho ----------
+const CAMPOS_SALVOS = ['carro', 'km', 'kml', 'litro', 'pedagio', 'estac', 'alim', 'horas', 'hora', 'pessoas', 'spread', 'cota', 'imposto'];
+const LS_CARRINHO = 'radar-py-carrinho';
 const num = (id) => parseFloat($('f_' + id).value) || 0;
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+let carrinho = [];
+
+function viagemAtual() {
+  return custoViagem({
+    kmIda: num('km'), kml: num('kml'), precoLitro: num('litro'),
+    pedagio: num('pedagio'), estacionamento: num('estac'), alimentacao: num('alim'),
+    horas: num('horas'), valorHora: num('hora'), pessoas: Math.max(1, num('pessoas')),
+  });
+}
 
 function calcular() {
-  const qtd = Math.max(1, num('qtd')), pessoas = Math.max(1, num('pessoas'));
-  const usd = num('precoUsd') * qtd, dolar = num('dolar');
-  const compra = usd * dolar;
+  const dolar = num('dolar'), pessoas = Math.max(1, num('pessoas'));
+  const v = viagemAtual();
+  const usdTotal = carrinho.reduce((s, i) => s + i.usd * i.qtd, 0);
+  const compra = usdTotal * dolar;
   const spread = compra * num('spread') / 100;
-  const imposto = Math.max(0, usd - num('cota')) * dolar * num('imposto') / 100;
-  const litros = num('kml') ? (num('km') * 2) / num('kml') : 0;
-  const combustivel = litros * num('litro');
-  const fixos = num('pedagio') + num('estac') + num('alim');
-  const tempo = num('horas') * num('hora');
-  const viagem = (combustivel + fixos + tempo) / pessoas;
-  const total = compra + spread + imposto + viagem;
-  const br = num('precoBr') * qtd;
+  const imposto = Math.max(0, usdTotal - num('cota')) * dolar * num('imposto') / 100;
+  const total = compra + spread + imposto + v.porPessoa;
+  const div = pessoas > 1 ? ` ÷ ${pessoas}` : '';
+  const carro = esc($('f_carro').value || 'carro');
 
-  const linhas = [
-    ['Produto' + (qtd > 1 ? ` (×${qtd})` : ''), compra],
-    ['Spread + IOF', spread],
-    ['Imposto (acima da cota)', imposto],
-    [`Combustível (${litros.toFixed(0)} l)` + (pessoas > 1 ? ` ÷ ${pessoas}` : ''), combustivel / pessoas],
-    ['Pedágio, estacionamento, comida' + (pessoas > 1 ? ` ÷ ${pessoas}` : ''), fixos / pessoas],
-    ['Seu tempo' + (pessoas > 1 ? ` ÷ ${pessoas}` : ''), tempo / pessoas],
-  ];
-  $('resultado').innerHTML = linhas.map(([l, v]) => `<tr><td>${l}</td><td>${fmtBrl(v)}</td></tr>`).join('') +
-    `<tr class="total"><td>Custo real no Paraguai</td><td>${fmtBrl(total)}</td></tr>`;
+  let h = '<tr><th>Item</th><th>Qtd.</th><th>R$</th><th></th></tr>';
+  h += carrinho.map((i, k) => `<tr><td>${esc(i.nome)}<div class="muted">${fmtUsd(i.usd)} un.</div></td>
+    <td><input type="number" min="1" step="1" value="${i.qtd}" data-qtd="${k}" style="width:64px" aria-label="Quantidade"></td>
+    <td>${dolar ? fmtBrl(i.usd * i.qtd * dolar) : '—'}</td>
+    <td><button type="button" data-rm="${k}" aria-label="Remover ${esc(i.nome)}" style="padding:2px 8px">×</button></td></tr>`).join('');
+  if (!carrinho.length) h += '<tr><td colspan="4" class="muted">Nenhum produto ainda — adicione acima.</td></tr>';
+  h += `<tr><td>🚗 Viagem — ${carro}<div class="muted">${v.litros.toFixed(1).replace('.', ',')} l de combustível = ${fmtBrl(v.combustivel)}${v.outros ? ` · outros ${fmtBrl(v.outros)}` : ''}${v.tempo ? ` · tempo ${fmtBrl(v.tempo)}` : ''}${div}</div></td><td></td><td>${fmtBrl(v.porPessoa)}</td><td></td></tr>`;
+  h += `<tr><td>Spread + IOF</td><td></td><td>${fmtBrl(spread)}</td><td></td></tr>`;
+  h += `<tr><td>Imposto acima da cota<div class="muted">compras: ${fmtUsd(usdTotal)} de ${fmtUsd(num('cota'))}</div></td><td></td><td>${fmtBrl(imposto)}</td><td></td></tr>`;
+  h += `<tr class="total"><td>Total da ida</td><td></td><td>${fmtBrl(total)}</td><td></td></tr>`;
+  $('carrinho').innerHTML = h;
 
-  const v = $('veredito');
-  if (!dolar || !num('precoUsd')) { v.textContent = 'Preencha preço e dólar para calcular.'; return; }
-  if (!br) { v.innerHTML = `Informe o preço no Brasil para comparar. Custo da viagem por pessoa: <b>${fmtBrl(viagem)}</b>.`; return; }
+  const ver = $('veredito');
+  if (!dolar) { ver.textContent = 'Informe o dólar para calcular.'; return; }
+  if (!carrinho.length) { ver.innerHTML = `Só a viagem custa <b>${fmtBrl(v.porPessoa)}</b>${pessoas > 1 ? ' por pessoa' : ''}.`; return; }
+  const comBr = carrinho.filter((i) => i.br > 0);
+  if (comBr.length !== carrinho.length) { ver.innerHTML = 'Informe o preço no Brasil de todos os itens para saber se compensa.'; return; }
+  const br = comBr.reduce((s, i) => s + i.br * i.qtd, 0);
   const eco = br - total;
-  const custoFixoPorUn = viagem; // viagem é paga uma vez
-  const economiaUn = num('precoBr') - (num('precoUsd') * dolar * (1 + num('spread') / 100));
-  const breakEven = economiaUn > 0 ? Math.ceil(custoFixoPorUn / economiaUn) : null;
-  v.innerHTML = eco > 0
-    ? `<b class="down">Vale a pena:</b> economia de <b>${fmtBrl(eco)}</b> (${fmtPct(eco / br * 100)}) frente ao Brasil (${fmtBrl(br)}).`
-    : `<b class="up">Não compensa:</b> sai <b>${fmtBrl(-eco)}</b> mais caro que comprar no Brasil (${fmtBrl(br)}).`;
-  if (breakEven && breakEven > qtd) v.innerHTML += `<br><span class="muted">A viagem se paga a partir de ${breakEven} unidades (sem considerar a cota).</span>`;
+  ver.innerHTML = eco > 0
+    ? `<b class="down">Vale a pena:</b> economia de <b>${fmtBrl(eco)}</b> (${fmtPct(eco / br * 100)}) frente a comprar tudo no Brasil (${fmtBrl(br)}).`
+    : `<b class="up">Não compensa:</b> sai <b>${fmtBrl(-eco)}</b> mais caro que comprar tudo no Brasil (${fmtBrl(br)}).`;
 }
 
 function salvar() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(Object.fromEntries(CAMPOS_SALVOS.map((k) => [k, $('f_' + k).value])))); } catch {}
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(Object.fromEntries(CAMPOS_SALVOS.map((k) => [k, $('f_' + k).value]))));
+    localStorage.setItem(LS_CARRINHO, JSON.stringify(carrinho));
+  } catch {}
 }
 function restaurar() {
   try {
     const s = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
     for (const k of CAMPOS_SALVOS) if (s[k] != null && s[k] !== '') $('f_' + k).value = s[k];
+    const c = JSON.parse(localStorage.getItem(LS_CARRINHO) || '[]');
+    if (Array.isArray(c)) carrinho = c.filter((i) => i && i.nome && i.usd > 0 && i.qtd > 0);
   } catch {}
 }
+
+$('addForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  const usd = parseFloat($('a_usd').value), qtd = Math.max(1, parseInt($('a_qtd').value, 10) || 1);
+  if (!(usd > 0)) return;
+  carrinho.push({ nome: $('a_nome').value.trim() || 'Produto', usd, qtd, br: parseFloat($('a_br').value) || 0 });
+  $('a_qtd').value = 1; $('a_br').value = '';
+  calcular(); salvar();
+});
+$('carrinho').addEventListener('click', (ev) => {
+  const k = ev.target.dataset.rm;
+  if (k != null) { carrinho.splice(+k, 1); calcular(); salvar(); }
+});
+$('carrinho').addEventListener('change', (ev) => {
+  const k = ev.target.dataset.qtd;
+  if (k != null) { carrinho[+k].qtd = Math.max(1, parseInt(ev.target.value, 10) || 1); calcular(); salvar(); }
+});
 
 // ---------- boot ----------
 function carregar(dados) {
